@@ -286,3 +286,8 @@ pnpm run start:client
 - Direct alignment between technical implementation and operational workflow needs
 
 The system was developed as a paid contract engagement and used in a real operational setting.
+
+## License
+
+This repository is provided for portfolio and demonstration purposes only.  
+Reuse, redistribution, or commercial use is not permitted without explicit permission.
