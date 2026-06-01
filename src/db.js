@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import env from "./config/env";
 
+mongoose.set("strictQuery", false);
+
 mongoose
   .connect(env.MONGO_URI)
   .then(() => console.log("DB Connected"))

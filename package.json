@@ -18,7 +18,7 @@
     "dev": "nodemon --watch \"dist/**/*\" -e js ./dist/index.js",
     "dev:build": "swc src -w --out-dir dist",
     "dev:client": "npm --prefix client run dev",
-    "dev:local": "npm run build:server && concurrently -n swc,api,web -c cyan,green,magenta \"npm:dev:build\" \"npm:dev\" \"npm:dev:client\"",
+    "dev:local": "npm run db:up && npm run build:server && concurrently -n swc,api,web -c cyan,green,magenta \"npm:dev:build\" \"npm:dev\" \"npm:dev:client\"",
     "start:client": "npm --prefix client run start",
     "test": "npm run build && node --test tests/*.test.cjs",
     "test:contract": "npm run build && node --test tests/openapi-contract.test.cjs",
@@ -26,6 +26,9 @@
     "audit": "npm audit",
     "audit:client": "npm --prefix client audit",
     "verify:audit": "npm audit && npm --prefix client audit",
+    "db:up": "docker compose up -d mongo",
+    "db:down": "docker compose stop mongo",
+    "db:reset": "docker compose down -v",
     "docker:build": "docker build -t cimax-api:local .",
     "docker:up": "docker compose up --build",
     "docker:down": "docker compose down",
@@ -47,6 +50,7 @@
   "devDependencies": {
     "@swc/cli": "^0.8.1",
     "@swc/core": "^1.15.40",
+    "chokidar": "^5.0.0",
     "concurrently": "^9.2.1",
     "nodemon": "^3.1.14"
   }

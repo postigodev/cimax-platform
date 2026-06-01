@@ -14,7 +14,8 @@ const env = {
   MONGO_URI: process.env.MONGO_URI || process.env.URI,
   PSW: process.env.PSW,
   CORS_ORIGIN: parseOrigins(
-    process.env.CORS_ORIGIN || "http://localhost:3000,https://cimax.postigo.sh"
+    process.env.CORS_ORIGIN ||
+      "http://localhost:5173,http://localhost:3000,https://cimax.postigo.sh"
   ),
 };
 

@@ -72,7 +72,7 @@ Backend `.env`:
 MONGO_URI=
 PSW=
 PORT=3001
-CORS_ORIGIN=http://localhost:3000,https://cimax.postigo.sh
+CORS_ORIGIN=http://localhost:5173,http://localhost:3000,https://cimax.postigo.sh
 ```
 
 Frontend `client/.env`:
@@ -106,11 +106,18 @@ npm run dev:local
 
 This starts:
 
+- MongoDB in Docker
 - SWC backend compiler in watch mode
 - Express API on `http://localhost:3001`
 - Vite web client on `http://localhost:5173`
 
-You still need a MongoDB connection in `.env`. The easiest fully-contained local backend stack is Docker:
+For this flow, `.env` should point at local Docker Mongo:
+
+```env
+MONGO_URI=mongodb://localhost:27017/cimax
+```
+
+If you want the API itself containerized too, use Docker Compose:
 
 ```bash
 npm run docker:up
@@ -120,9 +127,12 @@ Useful scripts:
 
 ```bash
 npm run setup        # install backend and frontend dependencies
-npm run dev:local    # run API compiler, API server, and web client
+npm run dev:local    # run Mongo, API compiler, API server, and web client
 npm run verify       # backend tests plus frontend production build
 npm run verify:audit # backend and frontend npm audit
+npm run db:up        # run only MongoDB in Docker
+npm run db:down      # stop only MongoDB
+npm run db:reset     # stop stack and remove Mongo volume
 npm run docker:up    # run API + Mongo with Docker Compose
 npm run docker:down  # stop Docker Compose stack
 npm run docker:reset # stop stack and remove Mongo volume
