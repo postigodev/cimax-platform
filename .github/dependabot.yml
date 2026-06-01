@@ -35,5 +35,6 @@ updates:
           - "@emotion/*"
       frontend-tooling:
         patterns:
-          - react-scripts
+          - vite
+          - "@vitejs/*"
           - "@testing-library/*"

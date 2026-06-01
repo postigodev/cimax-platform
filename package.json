@@ -19,6 +19,9 @@
     "test": "npm run build && node --test tests/*.test.cjs",
     "test:contract": "npm run build && node --test tests/openapi-contract.test.cjs",
     "verify": "npm test && npm run build:client",
+    "audit": "npm audit",
+    "audit:client": "npm --prefix client audit",
+    "verify:audit": "npm audit && npm --prefix client audit",
     "lint": "node -e \"console.log('No backend lint configured yet')\""
   },
   "keywords": [],

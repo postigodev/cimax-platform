@@ -14,11 +14,13 @@ Jobs:
 
 - Backend build and tests
 - Frontend production build
+- Backend and frontend dependency audit gates
 
 Backend verification:
 
 ```bash
 npm ci
+npm audit
 npm test
 ```
 
@@ -27,7 +29,14 @@ Frontend verification:
 ```bash
 cd client
 npm ci
+npm audit
 npm run build
+```
+
+Frontend build output:
+
+```text
+client/dist
 ```
 
 Local equivalent:
@@ -65,14 +74,18 @@ Backend dependency audit is clean after the first modernization pass:
 npm audit --omit=dev
 ```
 
-The frontend dependency graph still has known advisories from the legacy Create React App stack, so audit is not a blocking CI gate yet.
+The frontend was migrated from Create React App to Vite and now audits clean:
+
+```bash
+npm --prefix client audit
+```
 
 The modernization plan is:
 
 1. Keep CI green for build and contract safety.
 2. Keep backend runtime audit clean.
-3. Decide whether to migrate the frontend away from Create React App or harden the existing build.
-4. Add a blocking audit gate once frontend critical/high advisories are resolved or explicitly accepted.
+3. Keep frontend audit clean.
+4. Keep audit gates blocking on pull requests and `main`.
 
 ## Docker Image Publishing
 

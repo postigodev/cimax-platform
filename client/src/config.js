@@ -1,3 +1,3 @@
 export const CONFIG = {
-  DOMAIN: process.env.REACT_APP_API_URL || "http://localhost:3001/v1",
+  DOMAIN: import.meta.env.VITE_API_URL || "http://localhost:3001/v1",
 };

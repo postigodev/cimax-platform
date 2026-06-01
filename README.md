@@ -34,7 +34,7 @@ Frontend:
 - Material UI
 - Axios
 - SCSS
-- Create React App
+- Vite
 
 Target deployment:
 
@@ -78,10 +78,10 @@ CORS_ORIGIN=http://localhost:3000,https://cimax.postigo.sh
 Frontend `client/.env`:
 
 ```env
-REACT_APP_API_URL=http://localhost:3001/v1
+VITE_API_URL=http://localhost:3001/v1
 ```
 
-For Vercel, `REACT_APP_API_URL` should point to the Railway API URL plus `/v1`.
+For Vercel, `VITE_API_URL` should point to the Railway API URL plus `/v1`.
 
 ## Local Development
 
@@ -177,9 +177,9 @@ Local equivalent:
 npm run verify
 ```
 
-CI currently gates backend build/tests and frontend production build. Dependency audit is documented but not blocking yet because this legacy snapshot still has known advisories that will be resolved during the modernization track.
+CI currently gates backend build/tests and frontend production build. Dependency audit is available through `npm run verify:audit`.
 
-Backend runtime dependencies have been upgraded to an audit-clean baseline. The remaining dependency security work is concentrated in the legacy frontend toolchain.
+Backend and frontend dependencies have been upgraded to audit-clean baselines.
 
 CI/CD notes:
 

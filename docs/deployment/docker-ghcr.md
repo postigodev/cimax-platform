@@ -96,7 +96,7 @@ CORS_ORIGIN=https://cimax.postigo.sh
 After Railway creates the API URL, set the Vercel frontend variable:
 
 ```env
-REACT_APP_API_URL=https://<railway-service-domain>/v1
+VITE_API_URL=https://<railway-service-domain>/v1
 ```
 
 ## Notes

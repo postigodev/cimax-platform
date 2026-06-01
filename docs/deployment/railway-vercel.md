@@ -9,7 +9,7 @@ This project targets a split deployment:
 The Railway API domain will be generated during deployment. After Railway creates the service URL, set the Vercel environment variable:
 
 ```env
-REACT_APP_API_URL=https://<railway-service-domain>/v1
+VITE_API_URL=https://<railway-service-domain>/v1
 ```
 
 ## Railway API
@@ -43,7 +43,7 @@ Railway can deploy from the repository or from the published GHCR API image:
 ghcr.io/<owner>/<repo>/api
 ```
 
-The Railway service domain is generated during deployment. Once it exists, use that domain in Vercel as `REACT_APP_API_URL`.
+The Railway service domain is generated during deployment. Once it exists, use that domain in Vercel as `VITE_API_URL`.
 
 ## Vercel Web
 
@@ -53,10 +53,22 @@ Project root:
 client
 ```
 
+Build command:
+
+```bash
+npm run build
+```
+
+Output directory:
+
+```text
+dist
+```
+
 Required environment variables:
 
 ```env
-REACT_APP_API_URL=https://<railway-service-domain>/v1
+VITE_API_URL=https://<railway-service-domain>/v1
 ```
 
 Production domain:
