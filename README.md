@@ -85,41 +85,53 @@ For Vercel, `VITE_API_URL` should point to the Railway API URL plus `/v1`.
 
 ## Local Development
 
-Install backend dependencies:
+Install all dependencies:
 
 ```bash
-npm install
+npm run setup
 ```
 
-Install frontend dependencies:
+Create local env files:
 
 ```bash
-npm --prefix client install
+copy .env.example .env
+copy client\.env.example client\.env
 ```
 
-Build the backend once:
+Run the full local developer stack:
 
 ```bash
-npm run build
+npm run dev:local
 ```
 
-Run the backend:
+This starts:
+
+- SWC backend compiler in watch mode
+- Express API on `http://localhost:3001`
+- Vite web client on `http://localhost:5173`
+
+You still need a MongoDB connection in `.env`. The easiest fully-contained local backend stack is Docker:
 
 ```bash
-npm start
+npm run docker:up
 ```
 
-For backend development, run these in separate terminals:
+Useful scripts:
 
 ```bash
-npm run dev:build
-npm run dev
+npm run setup        # install backend and frontend dependencies
+npm run dev:local    # run API compiler, API server, and web client
+npm run verify       # backend tests plus frontend production build
+npm run verify:audit # backend and frontend npm audit
+npm run docker:up    # run API + Mongo with Docker Compose
+npm run docker:down  # stop Docker Compose stack
+npm run docker:reset # stop stack and remove Mongo volume
 ```
 
-Run the frontend:
+Build everything:
 
 ```bash
-npm run start:client
+npm run build:all
 ```
 
 ## API Surface

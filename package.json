@@ -9,19 +9,27 @@
   },
   "packageManager": "npm@11.6.2",
   "scripts": {
+    "setup": "npm install && npm --prefix client install",
     "start": "node dist/index.js",
     "build": "npm run build:server",
+    "build:all": "npm run build:server && npm run build:client",
     "build:server": "swc src --out-dir dist",
     "build:client": "npm --prefix client run build",
     "dev": "nodemon --watch \"dist/**/*\" -e js ./dist/index.js",
     "dev:build": "swc src -w --out-dir dist",
-    "start:client": "npm --prefix client start",
+    "dev:client": "npm --prefix client run dev",
+    "dev:local": "npm run build:server && concurrently -n swc,api,web -c cyan,green,magenta \"npm:dev:build\" \"npm:dev\" \"npm:dev:client\"",
+    "start:client": "npm --prefix client run start",
     "test": "npm run build && node --test tests/*.test.cjs",
     "test:contract": "npm run build && node --test tests/openapi-contract.test.cjs",
     "verify": "npm test && npm run build:client",
     "audit": "npm audit",
     "audit:client": "npm --prefix client audit",
     "verify:audit": "npm audit && npm --prefix client audit",
+    "docker:build": "docker build -t cimax-api:local .",
+    "docker:up": "docker compose up --build",
+    "docker:down": "docker compose down",
+    "docker:reset": "docker compose down -v",
     "lint": "node -e \"console.log('No backend lint configured yet')\""
   },
   "keywords": [],
@@ -39,6 +47,7 @@
   "devDependencies": {
     "@swc/cli": "^0.8.1",
     "@swc/core": "^1.15.40",
+    "concurrently": "^9.2.1",
     "nodemon": "^3.1.14"
   }
 }
