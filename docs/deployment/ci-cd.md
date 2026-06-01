@@ -68,11 +68,22 @@ The modernization plan is:
 3. Decide whether to migrate the frontend away from Create React App or harden the existing build.
 4. Add a blocking audit gate once critical/high advisories are resolved or explicitly accepted.
 
-## Next CI/CD Step
+## Docker Image Publishing
 
-The next deployment-oriented step is Docker image publishing:
+The API image is published by:
 
-- Add API `Dockerfile`
-- Build image in GitHub Actions
-- Publish to GitHub Container Registry
-- Use the image for Railway deployment
+```text
+.github/workflows/publish-image.yml
+```
+
+It builds the root `Dockerfile` and publishes to:
+
+```text
+ghcr.io/<owner>/<repo>/api
+```
+
+The image publishing workflow runs on pushes to `main` and can also be triggered manually.
+
+Docker/GHCR notes:
+
+- [docs/deployment/docker-ghcr.md](docker-ghcr.md)

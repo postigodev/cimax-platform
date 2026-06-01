@@ -37,6 +37,14 @@ Healthcheck:
 GET /health
 ```
 
+Railway can deploy from the repository or from the published GHCR API image:
+
+```text
+ghcr.io/<owner>/<repo>/api
+```
+
+The Railway service domain is generated during deployment. Once it exists, use that domain in Vercel as `REACT_APP_API_URL`.
+
 ## Vercel Web
 
 Project root:

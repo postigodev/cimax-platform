@@ -182,6 +182,8 @@ CI currently gates backend build/tests and frontend production build. Dependency
 CI/CD notes:
 
 - [docs/deployment/ci-cd.md](docs/deployment/ci-cd.md)
+- [docs/deployment/docker-ghcr.md](docs/deployment/docker-ghcr.md)
+- [docs/deployment/railway-vercel.md](docs/deployment/railway-vercel.md)
 
 ## Security Notes
 
