@@ -14,7 +14,6 @@ import SelectSort from "./selectSort";
 import { toast } from "react-hot-toast";
 import { CONFIG } from "../../config";
 import OrdenRow from "./OrdenRow";
-import os from 'os-browserify/browser';
 
 const rows = [
   "",
@@ -94,7 +93,6 @@ export const Ordenes = () => {
   };
 
   useEffect(() => {
-    console.log(os.hostname());
     const fetchOrders = async () => {
       let tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);

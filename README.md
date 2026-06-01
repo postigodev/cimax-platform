@@ -1,293 +1,173 @@
-🔒 **Sanitized Public Snapshot**
+# CIMAX Operations Platform
 
-This repository is a sanitized public version of a paid internal tool built for a healthcare services provider.  
-All proprietary data, operational records, and secrets have been removed.
+Sanitized public snapshot of a paid internal operations platform built for a dental healthcare services provider.
 
-# CIMAX – Internal Order & Doctor Management Platform
+This repository contains no production data, patient records, proprietary operational records, or secrets. It is being modernized as a portfolio case study focused on backend engineering, API design, security hardening, and deployment operations.
 
-> Sanitized public version of a paid internal tool built for a small healthcare-related business.
-> All proprietary data, branding, and secrets have been removed.
+## What It Does
 
-## Overview
+CIMAX centralizes order intake, doctor management, procedure classification, billing flags, delivery status, and operational filtering for a small healthcare workflow.
 
-CIMAX is a production-grade MERN application built to support internal operational workflows for a healthcare services provider.
+The original system replaced manual tracking with a structured MERN application:
 
-The platform centralizes order tracking, doctor management, and procedure classification into a single relational system backed by MongoDB. It was designed to replace manual tracking processes and provide structured filtering across time ranges, personnel, and procedure types.
-
-The system was developed over ~3 months as a contracted full-stack engagement and deployed for internal operational use.
-
----
+- Orders reference doctors and one or more procedures.
+- Operators can filter by date range, doctor, procedure, patient name, billing number, USB delivery, and workflow color.
+- Orders carry operational flags such as CD burned, USB, printed tomography, sent status, comments, and color-based workflow markers.
+- The UI is intentionally internal-tool style and Spanish-first because it mirrors the original operational context.
 
 ## Tech Stack
 
-### Backend
-
-* Node.js
-* Express
-* MongoDB + Mongoose
-* SWC (server transpilation)
-* UUID
-* Helmet
-* Morgan
-* CORS
-
-### Frontend
-
-* React
-* React Router
-* SCSS
-* Axios (via config abstraction)
-
----
-
-## Architecture
-
-The project follows a modular backend structure:
-
-```
-src/
-  controllers/
-  models/
-  routes/
-  middlewares/
-  lib/
-```
-The backend follows a layered structure separating routing, business logic, and validation concerns. Controllers encapsulate domain operations while middleware enforces request integrity and business constraints before reaching persistence logic.
-### Core Domain Models
-
-* **Doctor**
-* **Orden** (Order)
-* **Toma** (Procedure / Imaging type)
-
-Relations:
-
-* An `Orden` references:
-
-  * a `Doctor`
-  * one or multiple `Toma` entries
-* Dynamic population via Mongoose `.populate()`
-
----
-
-## Key Features
-
-### 1. Order Lifecycle Management
-
-* Create orders
-* Edit order metadata
-* Bulk delete
-* Color-coding system for workflow visualization
-* Auto-generated UUID identifiers
-* Manual override for billing IDs
-
-Each order stores:
-
-* Patient name
-* Age
-* Doctor reference
-* Procedures ("tomas")
-* Billing flags (USB / CD / printed)
-* Delivery status
-* Timestamped creation date
-
----
-
-### 2. Multi-Criteria Filtering System
-
-One of the core challenges in this project was designing a flexible filtering system across multiple axes:
-
-#### Filtering by:
-
-* Date range (`gte` / `lt`)
-* Doctor
-* Procedure (Toma)
-* Doctor + Procedure combination
-* Patient name (case-insensitive search)
-* Billing number
-* Workflow color flags
-* USB delivery flag
-
-Example pattern:
-
-```js
-Orden.find({
-  doctor,
-  date: { $gte: gte, $lt: lt }
-})
-.populate("doctor")
-.populate("toma")
-.sort({ date: 1 });
-```
-
-For compound relationships (Doctor + Toma), a hybrid approach was used:
-
-* Query primary relation in Mongo
-* Apply secondary in-memory filtering when necessary
-
-While aggregation pipelines could have been used for deeper relational filtering, this implementation prioritized clarity and maintainability given the operational data size and internal usage context.
-
-This system allowed dynamic UI-driven filtering in the React client.
-
----
-
-### 3. Validation & Middleware Layer
-
-Custom middleware layer handles:
-
-* Date validation
-* ObjectId validation
-* Business-rule checks
-* Duplicate billing prevention
-* Secure delete access via password gate (env-based)
-
-Example:
-
-* Validation for existing boleta
-* Validation for doctor/toma consistency
-* Request parameter enforcement
-
----
-
-### 4. Color-Based Workflow Logic
-
-Orders are automatically categorized using rule-based classification:
-
-* Tomography → green
-* Analysis/photos → cyan
-* Default → white
-
-Workflow color flags can also be manually toggled:
-
-* Doctor highlight
-* Comment highlight
-
-This allowed operational prioritization inside the UI.
-
----
-
-### 5. Frontend UI Organization
-
-React page-based structure:
-
-```
-pages/
-  doctors/
-  ordenes/
-  postOrden/
-  createDoctor/
-  navbar/
-```
-
-Features include:
-
-* Editable forms
-* Inline editing
-* Conditional components
-* Date pickers
-* Popover-based color selection
-* Order row visualization
-* Modular container components
-
----
-
-### Filtering Design Approach
-
-The filtering system combines:
-
-- MongoDB query operators ($gte / $lt)
-- Relational population via Mongoose
-- Conditional query branching
-- Hybrid in-memory refinement when compound relationship filtering was required
-
-This design enabled flexible UI-driven filtering without requiring complex aggregation pipelines, while maintaining readability and maintainability in the controller layer.
-
----
-
-## Design Decisions
-
-- Used UUIDs for order identifiers to avoid predictable incremental IDs.
-- Implemented middleware-based validation to isolate business rules from controllers.
-- Leveraged color-based workflow states instead of additional database state fields to simplify operational visualization.
-- Prioritized readability and modularization over premature optimization.
-
----
-
-## Environment Variables
-
-Create a `.env` file based on:
-
-```
-MONGO_URI=
-PSW=
-PORT=
-```
-
-`PSW` is used for restricted delete operations.
-
----
-
-## Running the Project
-
-### Install dependencies
-
 Backend:
 
-```
-pnpm install
-```
+- Node.js
+- Express
+- MongoDB + Mongoose
+- SWC
+- Helmet
+- CORS
+- Morgan
 
 Frontend:
 
+- React
+- React Router
+- Material UI
+- Axios
+- SCSS
+- Create React App
+
+Target deployment:
+
+- API: Railway
+- Web: Vercel
+- Web domain: `cimax.postigo.sh`
+
+## Current Modernization Track
+
+This repo is moving from legacy sanitized snapshot to production-style portfolio project.
+
+Planned engineering upgrades:
+
+- Central error handling
+- Request validation
+- Pagination and Mongo indexes
+- OpenAPI documentation
+- Contract and integration tests
+- RBAC for protected mutations
+- Idempotency keys for order creation
+- Redis caching for stable catalogs and reports
+- BullMQ for async exports/reports
+- Prometheus-style API metrics
+- k6 load testing
+- Docker and Docker Compose
+- GitHub Actions CI/CD
+- GHCR image publishing
+- Railway deployment and rollback docs
+
+## Environment
+
+Backend `.env`:
+
+```env
+MONGO_URI=
+PSW=
+PORT=3001
+CORS_ORIGIN=http://localhost:3000,https://cimax.postigo.sh
 ```
-cd client
-pnpm install
+
+Frontend `client/.env`:
+
+```env
+REACT_APP_API_URL=http://localhost:3001/v1
 ```
 
----
+For Vercel, `REACT_APP_API_URL` should point to the Railway API URL plus `/v1`.
 
-### Development Mode
+## Local Development
 
-Backend build watcher:
+Install backend dependencies:
 
-```
-pnpm run build:server
-```
-
-Run backend:
-
-```
-pnpm run dev
+```bash
+npm install
 ```
 
-Run frontend:
+Install frontend dependencies:
 
+```bash
+npm --prefix client install
 ```
-pnpm run start:client
+
+Build the backend once:
+
+```bash
+npm run build
 ```
 
----
+Run the backend:
 
-## Notes on This Public Version
+```bash
+npm start
+```
 
-* All sensitive environment variables were removed
-* Proprietary business logic and real production data were stripped
-* Some UI strings remain in Spanish (original production language)
-* Code reflects original development timeline and may include refactoring opportunities
+For backend development, run these in separate terminals:
 
----
+```bash
+npm run dev:build
+npm run dev
+```
 
-## Engineering Ownership & Scope
+Run the frontend:
 
-- End-to-end ownership of backend API design
-- MongoDB relational modeling (multi-reference population)
-- Middleware-based request validation architecture
-- Multi-criteria filtering system implementation
-- Full-stack React integration
-- Direct alignment between technical implementation and operational workflow needs
+```bash
+npm run start:client
+```
 
-The system was developed as a paid contract engagement and used in a real operational setting.
+## API Surface
+
+Current API prefix:
+
+```text
+/v1
+```
+
+Healthcheck:
+
+```text
+GET /health
+```
+
+Main resources:
+
+- `/v1/ordenes`
+- `/v1/doctores`
+
+OpenAPI documentation is planned as part of the modernization track.
+
+## Security Notes
+
+This is a sanitized public version. The production deployment path should use:
+
+- No real patient data
+- Demo-only seed data
+- Restricted mutation access
+- CORS allowlist
+- Request size limits
+- Rate limiting
+- Role-based access control
+- Railway/Vercel environment variables only
+
+## Portfolio Focus
+
+The point of this project is not to present a perfect greenfield app. It is a legacy modernization case study:
+
+- Real operational domain
+- Existing data model and workflows
+- Security cleanup
+- API contracts
+- Deployment hardening
+- Observability and performance validation
+- Documented engineering tradeoffs
 
 ## License
 
-This repository is provided for portfolio and demonstration purposes only.  
-Reuse, redistribution, or commercial use is not permitted without explicit permission.
+This repository is provided for portfolio and demonstration purposes only. Reuse, redistribution, or commercial use is not permitted without explicit permission.

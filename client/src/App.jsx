@@ -1,13 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { PostOrden, Ordenes, Navbar, Doctores, CreateDoctor } from "./pages";
 import { Toaster } from "react-hot-toast";
-import { createTheme, ThemeProvider } from "@mui/system";
-
-const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-  },
-});
 
 function App() {
   return (
