@@ -1,0 +1,489 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "CIMAX Operations API",
+    "version": "0.1.0",
+    "description": "Sanitized contract for the CIMAX dental operations platform API."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3001",
+      "description": "Local development"
+    },
+    {
+      "url": "https://<railway-service-domain>",
+      "description": "Railway production API"
+    }
+  ],
+  "tags": [
+    { "name": "Health" },
+    { "name": "Ordenes" },
+    { "name": "Doctores" }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": ["Health"],
+        "summary": "Service healthcheck",
+        "responses": {
+          "200": {
+            "description": "Service is healthy"
+          }
+        }
+      }
+    },
+    "/v1/ordenes/get-all/{gte}/{lt}": {
+      "get": {
+        "tags": ["Ordenes"],
+        "summary": "List orders in a date range",
+        "parameters": [
+          { "$ref": "#/components/parameters/Gte" },
+          { "$ref": "#/components/parameters/Lt" },
+          { "$ref": "#/components/parameters/Page" },
+          { "$ref": "#/components/parameters/Limit" }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/OrdenList" },
+          "400": { "$ref": "#/components/responses/Error" }
+        }
+      }
+    },
+    "/v1/ordenes/get-by-doctor/{doctor}/{gte}/{lt}": {
+      "get": {
+        "tags": ["Ordenes"],
+        "summary": "List orders by doctor in a date range",
+        "parameters": [
+          { "$ref": "#/components/parameters/DoctorId" },
+          { "$ref": "#/components/parameters/Gte" },
+          { "$ref": "#/components/parameters/Lt" },
+          { "$ref": "#/components/parameters/Page" },
+          { "$ref": "#/components/parameters/Limit" }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/OrdenList" },
+          "400": { "$ref": "#/components/responses/Error" }
+        }
+      }
+    },
+    "/v1/ordenes/get-by-toma/{toma}/{gte}/{lt}": {
+      "get": {
+        "tags": ["Ordenes"],
+        "summary": "List orders by procedure in a date range",
+        "parameters": [
+          { "$ref": "#/components/parameters/TomaId" },
+          { "$ref": "#/components/parameters/Gte" },
+          { "$ref": "#/components/parameters/Lt" },
+          { "$ref": "#/components/parameters/Page" },
+          { "$ref": "#/components/parameters/Limit" }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/OrdenList" },
+          "400": { "$ref": "#/components/responses/Error" }
+        }
+      }
+    },
+    "/v1/ordenes/get-by-doctor-toma/{doctor}/{toma}/{gte}/{lt}": {
+      "get": {
+        "tags": ["Ordenes"],
+        "summary": "List orders by doctor and procedure in a date range",
+        "parameters": [
+          { "$ref": "#/components/parameters/DoctorId" },
+          { "$ref": "#/components/parameters/TomaId" },
+          { "$ref": "#/components/parameters/Gte" },
+          { "$ref": "#/components/parameters/Lt" },
+          { "$ref": "#/components/parameters/Page" },
+          { "$ref": "#/components/parameters/Limit" }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/OrdenList" },
+          "400": { "$ref": "#/components/responses/Error" }
+        }
+      }
+    },
+    "/v1/ordenes/get-by-color/{gte}/{lt}": {
+      "get": {
+        "tags": ["Ordenes"],
+        "summary": "List highlighted doctor-color orders in a date range",
+        "parameters": [
+          { "$ref": "#/components/parameters/Gte" },
+          { "$ref": "#/components/parameters/Lt" },
+          { "$ref": "#/components/parameters/Page" },
+          { "$ref": "#/components/parameters/Limit" }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/OrdenList" },
+          "400": { "$ref": "#/components/responses/Error" }
+        }
+      }
+    },
+    "/v1/ordenes/get-by-paciente/{paciente}": {
+      "get": {
+        "tags": ["Ordenes"],
+        "summary": "Search orders by patient name",
+        "parameters": [
+          { "$ref": "#/components/parameters/Paciente" },
+          { "$ref": "#/components/parameters/Page" },
+          { "$ref": "#/components/parameters/Limit" }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/OrdenList" }
+        }
+      }
+    },
+    "/v1/ordenes/get-by-boleta/{boleta}": {
+      "get": {
+        "tags": ["Ordenes"],
+        "summary": "Find orders by billing number",
+        "parameters": [
+          { "$ref": "#/components/parameters/Boleta" }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/OrdenList" },
+          "404": { "$ref": "#/components/responses/Error" }
+        }
+      }
+    },
+    "/v1/ordenes/get-by-usb/{gte}/{lt}": {
+      "get": {
+        "tags": ["Ordenes"],
+        "summary": "List USB orders in a date range",
+        "parameters": [
+          { "$ref": "#/components/parameters/Gte" },
+          { "$ref": "#/components/parameters/Lt" },
+          { "$ref": "#/components/parameters/Page" },
+          { "$ref": "#/components/parameters/Limit" }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/OrdenList" },
+          "400": { "$ref": "#/components/responses/Error" }
+        }
+      }
+    },
+    "/v1/ordenes/create-orden": {
+      "post": {
+        "tags": ["Ordenes"],
+        "summary": "Create an order",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/OrdenCreateInput" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "$ref": "#/components/responses/OrdenObject" },
+          "400": { "$ref": "#/components/responses/Error" },
+          "409": { "$ref": "#/components/responses/Error" }
+        }
+      }
+    },
+    "/v1/ordenes/edit-orden/{id}": {
+      "put": {
+        "tags": ["Ordenes"],
+        "summary": "Edit an order",
+        "parameters": [{ "$ref": "#/components/parameters/OrdenId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/OrdenUpdateInput" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "$ref": "#/components/responses/OrdenObject" },
+          "404": { "$ref": "#/components/responses/Error" }
+        }
+      }
+    },
+    "/v1/ordenes/edit-color/{id}": {
+      "put": {
+        "tags": ["Ordenes"],
+        "summary": "Edit workflow color",
+        "parameters": [{ "$ref": "#/components/parameters/OrdenId" }],
+        "responses": {
+          "201": { "$ref": "#/components/responses/OrdenObject" },
+          "409": { "$ref": "#/components/responses/Error" }
+        }
+      }
+    },
+    "/v1/ordenes/edit-doctor-color/{id}": {
+      "put": {
+        "tags": ["Ordenes"],
+        "summary": "Toggle doctor highlight",
+        "parameters": [{ "$ref": "#/components/parameters/OrdenId" }],
+        "responses": {
+          "201": { "$ref": "#/components/responses/OrdenObject" },
+          "404": { "$ref": "#/components/responses/Error" }
+        }
+      }
+    },
+    "/v1/ordenes/edit-comment-color/{id}": {
+      "put": {
+        "tags": ["Ordenes"],
+        "summary": "Toggle comment highlight",
+        "parameters": [{ "$ref": "#/components/parameters/OrdenId" }],
+        "responses": {
+          "201": { "$ref": "#/components/responses/OrdenObject" },
+          "404": { "$ref": "#/components/responses/Error" }
+        }
+      }
+    },
+    "/v1/ordenes/delete-orden": {
+      "delete": {
+        "tags": ["Ordenes"],
+        "summary": "Bulk delete orders",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/BulkDeleteInput" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Orders deleted"
+          },
+          "401": { "$ref": "#/components/responses/Error" }
+        }
+      }
+    },
+    "/v1/doctores/create-doctor": {
+      "post": {
+        "tags": ["Doctores"],
+        "summary": "Create a doctor",
+        "responses": {
+          "201": { "$ref": "#/components/responses/DoctorObject" }
+        }
+      }
+    },
+    "/v1/doctores/edit-doctor/{id}": {
+      "put": {
+        "tags": ["Doctores"],
+        "summary": "Edit a doctor",
+        "parameters": [{ "$ref": "#/components/parameters/Id" }],
+        "responses": {
+          "201": { "$ref": "#/components/responses/DoctorObject" },
+          "404": { "$ref": "#/components/responses/Error" }
+        }
+      }
+    },
+    "/v1/doctores/all": {
+      "get": {
+        "tags": ["Doctores"],
+        "summary": "List doctors",
+        "responses": {
+          "200": { "$ref": "#/components/responses/DoctorList" }
+        }
+      }
+    },
+    "/v1/doctores/tomas": {
+      "get": {
+        "tags": ["Doctores"],
+        "summary": "List procedures",
+        "responses": {
+          "200": { "$ref": "#/components/responses/TomaList" }
+        }
+      }
+    },
+    "/v1/doctores/delete-doctor/{id}": {
+      "delete": {
+        "tags": ["Doctores"],
+        "summary": "Delete a doctor",
+        "parameters": [{ "$ref": "#/components/parameters/Id" }],
+        "responses": {
+          "201": {
+            "description": "Doctor deleted"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "Gte": {
+        "name": "gte",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string", "example": "2026-06-01" }
+      },
+      "Lt": {
+        "name": "lt",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string", "example": "2026-06-02" }
+      },
+      "Page": {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "schema": { "type": "integer", "minimum": 1, "default": 1 }
+      },
+      "Limit": {
+        "name": "limit",
+        "in": "query",
+        "required": false,
+        "schema": { "type": "integer", "minimum": 1, "maximum": 500, "default": 100 }
+      },
+      "OrdenId": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" }
+      },
+      "Id": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" }
+      },
+      "DoctorId": {
+        "name": "doctor",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" }
+      },
+      "TomaId": {
+        "name": "toma",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" }
+      },
+      "Paciente": {
+        "name": "paciente",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" }
+      },
+      "Boleta": {
+        "name": "boleta",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" }
+      }
+    },
+    "schemas": {
+      "Orden": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "Doctor": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "Toma": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "Pagination": {
+        "type": "object",
+        "properties": {
+          "total": { "type": "integer" },
+          "page": { "type": "integer" },
+          "limit": { "type": "integer" },
+          "pages": { "type": "integer" }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "required": ["status", "message"],
+        "properties": {
+          "status": { "type": "integer" },
+          "message": { "type": "string" },
+          "details": {}
+        }
+      },
+      "OrdenCreateInput": {
+        "type": "object",
+        "required": ["nombres", "apellidos", "toma", "doctor", "monto", "edad"],
+        "properties": {
+          "nombres": { "type": "string" },
+          "apellidos": { "type": "string" },
+          "toma": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "doctor": { "type": "string" },
+          "monto": { "type": "number" },
+          "edad": { "type": "number" },
+          "boleta": { "type": "string" },
+          "comentario": { "type": "string" },
+          "cd_quemado": { "type": "boolean" },
+          "usb": { "type": "boolean" },
+          "enviado": { "type": "boolean" },
+          "tomo_impresa": { "type": "boolean" }
+        }
+      },
+      "OrdenUpdateInput": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "BulkDeleteInput": {
+        "type": "object",
+        "required": ["password", "ids"],
+        "properties": {
+          "password": { "type": "string" },
+          "ids": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "responses": {
+      "Error": {
+        "description": "Standard error response",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" }
+          }
+        }
+      },
+      "OrdenList": {
+        "description": "Order list response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": { "type": "integer" },
+                "ordenes_length": { "type": "integer" },
+                "total": { "type": "integer" },
+                "pagination": { "$ref": "#/components/schemas/Pagination" },
+                "ordenes": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Orden" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "OrdenObject": {
+        "description": "Order object response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": { "type": "integer" },
+                "orden": { "$ref": "#/components/schemas/Orden" }
+              }
+            }
+          }
+        }
+      },
+      "DoctorList": {
+        "description": "Doctor list response"
+      },
+      "DoctorObject": {
+        "description": "Doctor object response"
+      },
+      "TomaList": {
+        "description": "Procedure list response"
+      }
+    }
+  }
+}

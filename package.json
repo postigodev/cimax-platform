@@ -16,7 +16,8 @@
     "dev": "nodemon --watch \"dist/**/*\" -e js ./dist/index.js",
     "dev:build": "swc src -w --out-dir dist",
     "start:client": "npm --prefix client start",
-    "test": "node -e \"console.log('No backend tests configured yet')\"",
+    "test": "npm run build && node --test tests/*.test.cjs",
+    "test:contract": "npm run build && node --test tests/openapi-contract.test.cjs",
     "lint": "node -e \"console.log('No backend lint configured yet')\""
   },
   "keywords": [],

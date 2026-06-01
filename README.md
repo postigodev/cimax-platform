@@ -141,7 +141,29 @@ Main resources:
 - `/v1/ordenes`
 - `/v1/doctores`
 
-OpenAPI documentation is planned as part of the modernization track.
+OpenAPI contract:
+
+- [docs/api/openapi.json](docs/api/openapi.json)
+
+Contract coverage currently checks that implemented Express routes are documented and that documented routes are not stale.
+
+## Tests
+
+Run backend smoke and contract tests:
+
+```bash
+npm test
+```
+
+Current coverage includes:
+
+- `GET /health`
+- standard 404 envelope
+- disallowed CORS origin rejection
+- OpenAPI top-level structure
+- implemented route coverage
+- stale route detection
+- path parameter consistency
 
 ## Security Notes
 

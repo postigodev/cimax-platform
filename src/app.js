@@ -17,7 +17,9 @@ app.use(
         return callback(null, true);
       }
 
-      return callback(new Error("Not allowed by CORS"));
+      const error = new Error("Not allowed by CORS");
+      error.status = 403;
+      return callback(error);
     },
   })
 );
