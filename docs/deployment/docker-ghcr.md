@@ -110,3 +110,5 @@ The Docker image intentionally excludes:
 - local dependency folders
 
 Runtime contents are limited to production dependencies and compiled API files in `dist`.
+
+The production dependency install currently reports `0 vulnerabilities` during Docker build.

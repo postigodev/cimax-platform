@@ -59,14 +59,20 @@ Updates are grouped by runtime and tooling packages to keep pull requests review
 
 ## Audit Policy
 
-Dependency audit is intentionally not a blocking CI gate yet. This repository started as a legacy sanitized snapshot and currently has known dependency advisories in both backend and frontend dependency graphs.
+Backend dependency audit is clean after the first modernization pass:
+
+```bash
+npm audit --omit=dev
+```
+
+The frontend dependency graph still has known advisories from the legacy Create React App stack, so audit is not a blocking CI gate yet.
 
 The modernization plan is:
 
 1. Keep CI green for build and contract safety.
-2. Upgrade backend runtime dependencies first.
+2. Keep backend runtime audit clean.
 3. Decide whether to migrate the frontend away from Create React App or harden the existing build.
-4. Add a blocking audit gate once critical/high advisories are resolved or explicitly accepted.
+4. Add a blocking audit gate once frontend critical/high advisories are resolved or explicitly accepted.
 
 ## Docker Image Publishing
 

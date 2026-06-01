@@ -179,6 +179,8 @@ npm run verify
 
 CI currently gates backend build/tests and frontend production build. Dependency audit is documented but not blocking yet because this legacy snapshot still has known advisories that will be resolved during the modernization track.
 
+Backend runtime dependencies have been upgraded to an audit-clean baseline. The remaining dependency security work is concentrated in the legacy frontend toolchain.
+
 CI/CD notes:
 
 - [docs/deployment/ci-cd.md](docs/deployment/ci-cd.md)
