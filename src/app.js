@@ -2,20 +2,18 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
-const app = express();
-const allowedOrigins = (process.env.CORS_ORIGIN || "http://localhost:3000,https://cimax.postigo.sh")
-  .split(",")
-  .map((origin) => origin.trim())
-  .filter(Boolean);
+import env from "./config/env";
+import { errorHandler, notFound } from "./middlewares/error.middlewares";
 
-//settings
-app.set("port", process.env.PORT || 3001);
-//middleware
+const app = express();
+
+app.set("port", env.PORT);
+
 app.use(morgan("dev"));
 app.use(
   cors({
     origin(origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (!origin || env.CORS_ORIGIN.includes(origin)) {
         return callback(null, true);
       }
 
@@ -26,15 +24,11 @@ app.use(
 app.use(helmet({ crossOriginOpenerPolicy: { policy: "unsafe-none" } }));
 app.use(express.json({ limit: "1mb" }));
 
-//routes
 app.get("/health", (req, res) =>
   res.json({ status: "ok", service: "cimax-api" })
 );
 app.use("/v1", require("./routes/api"));
-app.use("*", (req, res) =>
-  res
-    .status(404)
-    .json({ status: 404, message: "Olvidaste ingresar algunos parámetros" })
-);
-//init
+app.use(notFound);
+app.use(errorHandler);
+
 export default app;

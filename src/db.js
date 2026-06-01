@@ -1,16 +1,8 @@
 import mongoose from "mongoose";
-import { config } from 'dotenv';
-
-config();
-
-const mongoUri = process.env.MONGO_URI || process.env.URI;
-
-if (!mongoUri) {
-  throw new Error("Missing MONGO_URI environment variable");
-}
+import env from "./config/env";
 
 mongoose
-  .connect(mongoUri)
+  .connect(env.MONGO_URI)
   .then(() => console.log("DB Connected"))
   .catch((error) => {
     console.error("DB connection failed", error);

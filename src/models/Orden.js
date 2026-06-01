@@ -4,7 +4,7 @@ const OrdenSchema = new Schema({
   date: {
     type: Date,
     required: true,
-    default: new Date(),
+    default: Date.now,
   },
   nombres: {
     type: String,
@@ -62,5 +62,13 @@ const OrdenSchema = new Schema({
   },
   boleta: String
 });
+
+OrdenSchema.index({ date: 1 });
+OrdenSchema.index({ doctor: 1, date: 1 });
+OrdenSchema.index({ toma: 1, date: 1 });
+OrdenSchema.index({ boletaa: 1 });
+OrdenSchema.index({ doctor_color: 1, date: 1 });
+OrdenSchema.index({ usb: 1, date: 1 });
+OrdenSchema.index({ nombres: "text", apellidos: "text" });
 
 export default model("Orden", OrdenSchema);
