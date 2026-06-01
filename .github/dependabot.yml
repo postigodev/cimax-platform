@@ -1,0 +1,39 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      backend-runtime:
+        patterns:
+          - express
+          - mongoose
+          - helmet
+          - cors
+          - morgan
+          - uuid
+      backend-tooling:
+        patterns:
+          - "@swc/*"
+          - nodemon
+
+  - package-ecosystem: npm
+    directory: /client
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      frontend-runtime:
+        patterns:
+          - react
+          - react-dom
+          - react-router-dom
+          - axios
+          - "@mui/*"
+          - "@emotion/*"
+      frontend-tooling:
+        patterns:
+          - react-scripts
+          - "@testing-library/*"

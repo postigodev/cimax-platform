@@ -18,6 +18,7 @@
     "start:client": "npm --prefix client start",
     "test": "npm run build && node --test tests/*.test.cjs",
     "test:contract": "npm run build && node --test tests/openapi-contract.test.cjs",
+    "verify": "npm test && npm run build:client",
     "lint": "node -e \"console.log('No backend lint configured yet')\""
   },
   "keywords": [],

@@ -165,6 +165,24 @@ Current coverage includes:
 - stale route detection
 - path parameter consistency
 
+## CI/CD
+
+GitHub Actions workflow:
+
+- [`.github/workflows/ci.yml`](.github/workflows/ci.yml)
+
+Local equivalent:
+
+```bash
+npm run verify
+```
+
+CI currently gates backend build/tests and frontend production build. Dependency audit is documented but not blocking yet because this legacy snapshot still has known advisories that will be resolved during the modernization track.
+
+CI/CD notes:
+
+- [docs/deployment/ci-cd.md](docs/deployment/ci-cd.md)
+
 ## Security Notes
 
 This is a sanitized public version. The production deployment path should use:
