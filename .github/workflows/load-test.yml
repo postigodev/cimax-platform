@@ -1,0 +1,46 @@
+name: Load Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: "API base URL, for example https://<railway-service-domain>"
+        required: true
+        type: string
+      scenario:
+        description: "k6 scenario to run"
+        required: true
+        default: "smoke"
+        type: choice
+        options:
+          - smoke
+          - baseline
+
+jobs:
+  k6:
+    name: k6 ${{ inputs.scenario }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run k6 scenario
+        env:
+          BASE_URL: ${{ inputs.base_url }}
+          API_KEY: ${{ secrets.K6_API_KEY }}
+        run: |
+          if [ "${{ inputs.scenario }}" = "baseline" ]; then
+            docker run --rm \
+              -e BASE_URL \
+              -e API_KEY \
+              -v "$PWD:/workspace" \
+              -w /workspace \
+              grafana/k6:latest run load/k6/api-baseline.js
+          else
+            docker run --rm \
+              -e BASE_URL \
+              -e API_KEY \
+              -v "$PWD:/workspace" \
+              -w /workspace \
+              grafana/k6:latest run load/k6/api-smoke.js
+          fi

@@ -27,6 +27,8 @@
     "audit": "npm audit",
     "audit:client": "npm --prefix client audit",
     "verify:audit": "npm audit && npm --prefix client audit",
+    "load:smoke": "k6 run load/k6/api-smoke.js",
+    "load:baseline": "k6 run load/k6/api-baseline.js",
     "db:up": "docker compose up -d mongo",
     "db:seed": "npm run build:server && node dist/scripts/seedDemo.js",
     "db:down": "docker compose stop mongo",

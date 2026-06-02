@@ -57,6 +57,27 @@ The backend test suite currently verifies:
 - stale route detection
 - path parameter consistency
 
+## Performance Checks
+
+k6 load-test scripts are kept out of the default CI gate until the first hosted Railway baseline exists. They can be run manually against local Docker MongoDB or the Railway API:
+
+```bash
+npm run load:smoke
+npm run load:baseline
+```
+
+Notes:
+
+- [docs/performance/k6-load-testing.md](../performance/k6-load-testing.md)
+
+Manual workflow:
+
+```text
+.github/workflows/load-test.yml
+```
+
+The workflow uses `K6_API_KEY` from GitHub Actions secrets and accepts the Railway API URL as a dispatch input.
+
 ## Dependency Updates
 
 Dependabot is enabled for:

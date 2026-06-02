@@ -154,6 +154,7 @@ npm run dev:local    # run Mongo, API compiler, API server, and web client
 npm run dev:demo     # seed demo data, then run the local stack
 npm run verify       # backend tests plus frontend production build
 npm run verify:audit # backend and frontend npm audit
+npm run load:smoke   # short k6 API smoke test
 npm run db:up        # run only MongoDB in Docker
 npm run db:seed      # seed deterministic local demo data
 npm run db:down      # stop only MongoDB
@@ -233,6 +234,27 @@ Current coverage includes:
 - implemented route coverage
 - stale route detection
 - path parameter consistency
+
+## Load Testing
+
+k6 scenarios live in:
+
+- [load/k6/api-smoke.js](load/k6/api-smoke.js)
+- [load/k6/api-baseline.js](load/k6/api-baseline.js)
+
+Local smoke:
+
+```bash
+npm run load:smoke
+```
+
+Baseline notes:
+
+- [docs/performance/k6-load-testing.md](docs/performance/k6-load-testing.md)
+
+Manual Railway load-test workflow:
+
+- [`.github/workflows/load-test.yml`](.github/workflows/load-test.yml)
 
 ## CI/CD
 
