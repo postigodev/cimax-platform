@@ -27,6 +27,21 @@ test("GET /health returns service status", async (t) => {
   assert.deepEqual(body, { status: "ok", service: "cimax-api" });
 });
 
+test("GET /metrics exposes Prometheus-style counters", async (t) => {
+  const server = await listen();
+  t.after(() => server.close());
+
+  await fetch(`http://127.0.0.1:${server.address().port}/health`);
+  const response = await fetch(`http://127.0.0.1:${server.address().port}/metrics`);
+  const body = await response.text();
+
+  assert.equal(response.status, 200);
+  assert.match(response.headers.get("content-type"), /text\/plain/);
+  assert.match(body, /cimax_process_uptime_seconds/);
+  assert.match(body, /cimax_http_requests_total/);
+  assert.match(body, /path="\/health"/);
+});
+
 test("unknown routes use the standard 404 envelope", async (t) => {
   const server = await listen();
   t.after(() => server.close());

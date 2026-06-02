@@ -24,7 +24,10 @@ const getApiMounts = () => {
 };
 
 const getImplementedRoutes = () => {
-  const routes = [{ method: "get", path: "/health" }];
+  const routes = [
+    { method: "get", path: "/health" },
+    { method: "get", path: "/metrics" },
+  ];
 
   for (const mount of getApiMounts()) {
     const source = fs.readFileSync(

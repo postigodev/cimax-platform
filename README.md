@@ -75,6 +75,8 @@ PORT=3001
 ADMIN_API_KEY=local-admin-key
 OPERATOR_API_KEY=local-operator-key
 VIEWER_API_KEY=local-viewer-key
+RATE_LIMIT_WINDOW_MS=60000
+RATE_LIMIT_MAX=120
 CORS_ORIGIN=http://localhost:5173,http://localhost:3000,https://cimax.postigo.sh
 ```
 
@@ -122,6 +124,8 @@ PSW=local-delete-password
 ADMIN_API_KEY=local-admin-key
 OPERATOR_API_KEY=local-operator-key
 VIEWER_API_KEY=local-viewer-key
+RATE_LIMIT_WINDOW_MS=60000
+RATE_LIMIT_MAX=120
 ```
 
 Seed deterministic demo data:
@@ -178,6 +182,14 @@ Healthcheck:
 ```text
 GET /health
 ```
+
+Metrics:
+
+```text
+GET /metrics
+```
+
+The metrics endpoint exposes Prometheus-style counters for request totals, request duration sums, and process uptime. The `/v1` API is protected by an in-memory fixed-window rate limit, configured with `RATE_LIMIT_WINDOW_MS` and `RATE_LIMIT_MAX`.
 
 Main resources:
 

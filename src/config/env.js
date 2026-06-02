@@ -21,6 +21,10 @@ const env = {
       process.env.OPERATOR_API_KEY || (isProduction ? undefined : "local-operator-key"),
     viewer: process.env.VIEWER_API_KEY || (isProduction ? undefined : "local-viewer-key"),
   },
+  RATE_LIMIT: {
+    WINDOW_MS: Number(process.env.RATE_LIMIT_WINDOW_MS || 60_000),
+    MAX: Number(process.env.RATE_LIMIT_MAX || 120),
+  },
   CORS_ORIGIN: parseOrigins(
     process.env.CORS_ORIGIN ||
       "http://localhost:5173,http://localhost:3000,https://cimax.postigo.sh"

@@ -32,6 +32,25 @@
         }
       }
     },
+    "/metrics": {
+      "get": {
+        "tags": ["Health"],
+        "summary": "Prometheus-style service metrics",
+        "responses": {
+          "200": {
+            "description": "Metrics in text exposition format",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "cimax_process_uptime_seconds 42"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/ordenes/get-all/{gte}/{lt}": {
       "get": {
         "tags": ["Ordenes"],
