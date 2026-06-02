@@ -77,6 +77,7 @@ OPERATOR_API_KEY=local-operator-key
 VIEWER_API_KEY=local-viewer-key
 RATE_LIMIT_WINDOW_MS=60000
 RATE_LIMIT_MAX=120
+IDEMPOTENCY_TTL_MS=86400000
 CORS_ORIGIN=http://localhost:5173,http://localhost:3000,https://cimax.postigo.sh
 ```
 
@@ -126,6 +127,7 @@ OPERATOR_API_KEY=local-operator-key
 VIEWER_API_KEY=local-viewer-key
 RATE_LIMIT_WINDOW_MS=60000
 RATE_LIMIT_MAX=120
+IDEMPOTENCY_TTL_MS=86400000
 ```
 
 Seed deterministic demo data:
@@ -210,6 +212,18 @@ Local role defaults:
 - `admin`: all mutations, including deletes and doctor management
 
 Production requires explicit `ADMIN_API_KEY`, `OPERATOR_API_KEY`, and `VIEWER_API_KEY` values.
+
+Order creation also supports an optional `Idempotency-Key` header:
+
+```bash
+curl -X POST \
+  -H "x-api-key: local-operator-key" \
+  -H "Idempotency-Key: demo-order-001" \
+  -H "Content-Type: application/json" \
+  http://localhost:3001/v1/ordenes/create-orden
+```
+
+The same key and payload replays the original `201` response. The same key with a different payload returns `409`. Stored idempotency responses expire through MongoDB TTL using `IDEMPOTENCY_TTL_MS`.
 
 OpenAPI contract:
 

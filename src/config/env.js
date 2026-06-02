@@ -25,6 +25,9 @@ const env = {
     WINDOW_MS: Number(process.env.RATE_LIMIT_WINDOW_MS || 60_000),
     MAX: Number(process.env.RATE_LIMIT_MAX || 120),
   },
+  IDEMPOTENCY: {
+    TTL_MS: Number(process.env.IDEMPOTENCY_TTL_MS || 86_400_000),
+  },
   CORS_ORIGIN: parseOrigins(
     process.env.CORS_ORIGIN ||
       "http://localhost:5173,http://localhost:3000,https://cimax.postigo.sh"

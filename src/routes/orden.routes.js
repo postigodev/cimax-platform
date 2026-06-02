@@ -23,6 +23,10 @@ import {
 } from "../middlewares/orden.middlewares";
 import { requireRole } from "../middlewares/auth.middlewares";
 import { asyncHandler } from "../middlewares/error.middlewares";
+import {
+  idempotencyMiddleware,
+  reserveIdempotency,
+} from "../middlewares/idempotency.middlewares";
 
 import { Router } from "express";
 
@@ -50,7 +54,13 @@ router.get("/get-by-boleta/:boleta", asyncHandler(getOrdenByBoleta));
 router.get("/get-by-usb/:gte/:lt", [checkGte], asyncHandler(getOrdenByUSB));
 router.post(
   "/create-orden",
-  [requireRole("operator"), asyncHandler(checkParams), asyncHandler(checkTomaAndDoctor)],
+  [
+    requireRole("operator"),
+    asyncHandler(idempotencyMiddleware),
+    asyncHandler(checkParams),
+    asyncHandler(checkTomaAndDoctor),
+    asyncHandler(reserveIdempotency),
+  ],
   asyncHandler(postOrden)
 );
 router.put(

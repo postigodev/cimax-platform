@@ -113,6 +113,29 @@ test("viewer API keys cannot mutate orders", async (t) => {
   assert.equal(body.message, "No tiene permisos para esta accion");
 });
 
+test("invalid idempotency keys are rejected before order creation", async (t) => {
+  const server = await listen();
+  t.after(() => server.close());
+
+  const response = await fetch(
+    `http://127.0.0.1:${server.address().port}/v1/ordenes/create-orden`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": "local-operator-key",
+        "Idempotency-Key": "invalid key with spaces",
+      },
+      body: JSON.stringify({}),
+    }
+  );
+  const body = await response.json();
+
+  assert.equal(response.status, 400);
+  assert.equal(body.status, 400);
+  assert.equal(body.message, "Idempotency-Key invalida");
+});
+
 test("operator API keys cannot use admin-only delete routes", async (t) => {
   const server = await listen();
   t.after(() => server.close());

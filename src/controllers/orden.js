@@ -3,6 +3,7 @@ import Toma from "../models/Toma";
 import { v4 } from "uuid";
 import ApiError from "../utils/ApiError";
 import { getPagination, getPaginationMeta } from "../utils/pagination";
+import { completeIdempotency } from "../middlewares/idempotency.middlewares";
 
 const styles = ["#00a000", "cyan", "#fff"];
 
@@ -157,7 +158,9 @@ const postOrden = async (req, res) => {
   });
 
   await newOrden.save();
-  return res.status(201).json({ status: 201, orden: newOrden });
+  const responseBody = { status: 201, orden: newOrden };
+  await completeIdempotency(req, 201, responseBody);
+  return res.status(201).json(responseBody);
 };
 
 const editOrden = async (req, res) => {

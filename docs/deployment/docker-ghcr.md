@@ -30,6 +30,7 @@ docker run --rm \
   -e VIEWER_API_KEY="local-viewer-key" \
   -e RATE_LIMIT_WINDOW_MS=60000 \
   -e RATE_LIMIT_MAX=120 \
+  -e IDEMPOTENCY_TTL_MS=86400000 \
   -e CORS_ORIGIN="http://localhost:3000,https://cimax.postigo.sh" \
   cimax-api:local
 ```
@@ -99,6 +100,7 @@ OPERATOR_API_KEY=
 VIEWER_API_KEY=
 RATE_LIMIT_WINDOW_MS=60000
 RATE_LIMIT_MAX=120
+IDEMPOTENCY_TTL_MS=86400000
 PORT=3001
 CORS_ORIGIN=https://cimax.postigo.sh
 ```

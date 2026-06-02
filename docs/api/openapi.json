@@ -183,6 +183,7 @@
         "tags": ["Ordenes"],
         "summary": "Create an order",
         "security": [{ "ApiKeyAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/IdempotencyKey" }],
         "requestBody": {
           "required": true,
           "content": {
@@ -362,6 +363,17 @@
         "in": "query",
         "required": false,
         "schema": { "type": "integer", "minimum": 1, "maximum": 500, "default": 100 }
+      },
+      "IdempotencyKey": {
+        "name": "Idempotency-Key",
+        "in": "header",
+        "required": false,
+        "description": "Optional client-generated key for safe order creation retries. Reusing the same key with the same payload replays the original response; reusing it with a different payload returns 409.",
+        "schema": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        }
       },
       "OrdenId": {
         "name": "id",
