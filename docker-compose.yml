@@ -9,6 +9,9 @@ services:
       PORT: 3001
       MONGO_URI: mongodb://mongo:27017/cimax
       PSW: local-delete-password
+      ADMIN_API_KEY: local-admin-key
+      OPERATOR_API_KEY: local-operator-key
+      VIEWER_API_KEY: local-viewer-key
       CORS_ORIGIN: http://localhost:3000,https://cimax.postigo.sh
     depends_on:
       mongo:

@@ -163,6 +163,7 @@
       "post": {
         "tags": ["Ordenes"],
         "summary": "Create an order",
+        "security": [{ "ApiKeyAuth": [] }],
         "requestBody": {
           "required": true,
           "content": {
@@ -182,6 +183,7 @@
       "put": {
         "tags": ["Ordenes"],
         "summary": "Edit an order",
+        "security": [{ "ApiKeyAuth": [] }],
         "parameters": [{ "$ref": "#/components/parameters/OrdenId" }],
         "requestBody": {
           "required": true,
@@ -201,6 +203,7 @@
       "put": {
         "tags": ["Ordenes"],
         "summary": "Edit workflow color",
+        "security": [{ "ApiKeyAuth": [] }],
         "parameters": [{ "$ref": "#/components/parameters/OrdenId" }],
         "responses": {
           "201": { "$ref": "#/components/responses/OrdenObject" },
@@ -212,6 +215,7 @@
       "put": {
         "tags": ["Ordenes"],
         "summary": "Toggle doctor highlight",
+        "security": [{ "ApiKeyAuth": [] }],
         "parameters": [{ "$ref": "#/components/parameters/OrdenId" }],
         "responses": {
           "201": { "$ref": "#/components/responses/OrdenObject" },
@@ -223,6 +227,7 @@
       "put": {
         "tags": ["Ordenes"],
         "summary": "Toggle comment highlight",
+        "security": [{ "ApiKeyAuth": [] }],
         "parameters": [{ "$ref": "#/components/parameters/OrdenId" }],
         "responses": {
           "201": { "$ref": "#/components/responses/OrdenObject" },
@@ -234,6 +239,7 @@
       "delete": {
         "tags": ["Ordenes"],
         "summary": "Bulk delete orders",
+        "security": [{ "ApiKeyAuth": [] }],
         "requestBody": {
           "required": true,
           "content": {
@@ -254,6 +260,7 @@
       "post": {
         "tags": ["Doctores"],
         "summary": "Create a doctor",
+        "security": [{ "ApiKeyAuth": [] }],
         "responses": {
           "201": { "$ref": "#/components/responses/DoctorObject" }
         }
@@ -263,6 +270,7 @@
       "put": {
         "tags": ["Doctores"],
         "summary": "Edit a doctor",
+        "security": [{ "ApiKeyAuth": [] }],
         "parameters": [{ "$ref": "#/components/parameters/Id" }],
         "responses": {
           "201": { "$ref": "#/components/responses/DoctorObject" },
@@ -292,6 +300,7 @@
       "delete": {
         "tags": ["Doctores"],
         "summary": "Delete a doctor",
+        "security": [{ "ApiKeyAuth": [] }],
         "parameters": [{ "$ref": "#/components/parameters/Id" }],
         "responses": {
           "201": {
@@ -302,6 +311,14 @@
     }
   },
   "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-api-key",
+        "description": "Role-based API key. Local defaults are documented in .env.example; production deployments must set explicit keys."
+      }
+    },
     "parameters": {
       "Gte": {
         "name": "gte",

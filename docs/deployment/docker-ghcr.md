@@ -25,6 +25,9 @@ docker run --rm \
   -p 3001:3001 \
   -e MONGO_URI="mongodb://host.docker.internal:27017/cimax" \
   -e PSW="local-delete-password" \
+  -e ADMIN_API_KEY="local-admin-key" \
+  -e OPERATOR_API_KEY="local-operator-key" \
+  -e VIEWER_API_KEY="local-viewer-key" \
   -e CORS_ORIGIN="http://localhost:3000,https://cimax.postigo.sh" \
   cimax-api:local
 ```
@@ -89,6 +92,9 @@ Railway environment variables:
 ```env
 MONGO_URI=
 PSW=
+ADMIN_API_KEY=
+OPERATOR_API_KEY=
+VIEWER_API_KEY=
 PORT=3001
 CORS_ORIGIN=https://cimax.postigo.sh
 ```

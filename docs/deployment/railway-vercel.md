@@ -19,9 +19,15 @@ Required environment variables:
 ```env
 MONGO_URI=
 PSW=
+ADMIN_API_KEY=
+OPERATOR_API_KEY=
+VIEWER_API_KEY=
 PORT=3001
 CORS_ORIGIN=https://cimax.postigo.sh
 ```
+
+The API exits at startup in production if role-scoped API keys are missing.
+Use strong generated values in Railway and pass them only to trusted admin/operator clients.
 
 Expected commands:
 

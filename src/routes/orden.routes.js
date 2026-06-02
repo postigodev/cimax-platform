@@ -21,6 +21,7 @@ import {
   checkTomaAndDoctor,
   ordenExist,
 } from "../middlewares/orden.middlewares";
+import { requireRole } from "../middlewares/auth.middlewares";
 import { asyncHandler } from "../middlewares/error.middlewares";
 
 import { Router } from "express";
@@ -49,24 +50,32 @@ router.get("/get-by-boleta/:boleta", asyncHandler(getOrdenByBoleta));
 router.get("/get-by-usb/:gte/:lt", [checkGte], asyncHandler(getOrdenByUSB));
 router.post(
   "/create-orden",
-  [asyncHandler(checkParams), asyncHandler(checkTomaAndDoctor)],
+  [requireRole("operator"), asyncHandler(checkParams), asyncHandler(checkTomaAndDoctor)],
   asyncHandler(postOrden)
 );
-router.put("/edit-orden/:id", [asyncHandler(ordenExist)], asyncHandler(editOrden));
+router.put(
+  "/edit-orden/:id",
+  [requireRole("operator"), asyncHandler(ordenExist)],
+  asyncHandler(editOrden)
+);
 router.put(
   "/edit-color/:id",
-  [asyncHandler(ordenExist)],
+  [requireRole("operator"), asyncHandler(ordenExist)],
   asyncHandler(editOrderColor)
 );
 router.put(
   "/edit-doctor-color/:id",
-  [asyncHandler(ordenExist)],
+  [requireRole("operator"), asyncHandler(ordenExist)],
   asyncHandler(editDoctorColor)
 );
 router.put(
   "/edit-comment-color/:id",
-  [asyncHandler(ordenExist)],
+  [requireRole("operator"), asyncHandler(ordenExist)],
   asyncHandler(editCommentColor)
 );
-router.delete("/delete-orden", [asyncHandler(checkPwd)], asyncHandler(bulkDeleteOrdens));
+router.delete(
+  "/delete-orden",
+  [requireRole("admin"), asyncHandler(checkPwd)],
+  asyncHandler(bulkDeleteOrdens)
+);
 module.exports = router;

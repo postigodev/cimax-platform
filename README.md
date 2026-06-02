@@ -72,6 +72,9 @@ Backend `.env`:
 MONGO_URI=
 PSW=
 PORT=3001
+ADMIN_API_KEY=local-admin-key
+OPERATOR_API_KEY=local-operator-key
+VIEWER_API_KEY=local-viewer-key
 CORS_ORIGIN=http://localhost:5173,http://localhost:3000,https://cimax.postigo.sh
 ```
 
@@ -115,6 +118,22 @@ For this flow, `.env` should point at local Docker Mongo:
 
 ```env
 MONGO_URI=mongodb://localhost:27017/cimax
+PSW=local-delete-password
+ADMIN_API_KEY=local-admin-key
+OPERATOR_API_KEY=local-operator-key
+VIEWER_API_KEY=local-viewer-key
+```
+
+Seed deterministic demo data:
+
+```bash
+npm run db:seed
+```
+
+Or run a fully seeded local demo in one command:
+
+```bash
+npm run dev:demo
 ```
 
 If you want the API itself containerized too, use Docker Compose:
@@ -128,9 +147,11 @@ Useful scripts:
 ```bash
 npm run setup        # install backend and frontend dependencies
 npm run dev:local    # run Mongo, API compiler, API server, and web client
+npm run dev:demo     # seed demo data, then run the local stack
 npm run verify       # backend tests plus frontend production build
 npm run verify:audit # backend and frontend npm audit
 npm run db:up        # run only MongoDB in Docker
+npm run db:seed      # seed deterministic local demo data
 npm run db:down      # stop only MongoDB
 npm run db:reset     # stop stack and remove Mongo volume
 npm run docker:up    # run API + Mongo with Docker Compose
@@ -162,6 +183,20 @@ Main resources:
 
 - `/v1/ordenes`
 - `/v1/doctores`
+
+Mutation routes require an `x-api-key` header:
+
+```bash
+curl -H "x-api-key: local-operator-key" http://localhost:3001/v1/ordenes/create-orden
+```
+
+Local role defaults:
+
+- `viewer`: read-only key for contract demos
+- `operator`: create/edit orders and workflow flags
+- `admin`: all mutations, including deletes and doctor management
+
+Production requires explicit `ADMIN_API_KEY`, `OPERATOR_API_KEY`, and `VIEWER_API_KEY` values.
 
 OpenAPI contract:
 
@@ -215,7 +250,7 @@ This is a sanitized public version. The production deployment path should use:
 
 - No real patient data
 - Demo-only seed data
-- Restricted mutation access
+- Restricted mutation access through role-scoped API keys
 - CORS allowlist
 - Request size limits
 - Rate limiting
