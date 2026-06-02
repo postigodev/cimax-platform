@@ -7,6 +7,7 @@ process.env.CORS_ORIGIN =
 process.env.ADMIN_API_KEY = process.env.ADMIN_API_KEY || "local-admin-key";
 process.env.OPERATOR_API_KEY = process.env.OPERATOR_API_KEY || "local-operator-key";
 process.env.VIEWER_API_KEY = process.env.VIEWER_API_KEY || "local-viewer-key";
+process.env.QUEUE_ENABLED = "false";
 
 const appModule = require("../dist/app.js");
 const app = appModule.default || appModule;
@@ -24,7 +25,11 @@ test("GET /health returns service status", async (t) => {
   const body = await response.json();
 
   assert.equal(response.status, 200);
-  assert.deepEqual(body, { status: "ok", service: "cimax-api" });
+  assert.deepEqual(body, {
+    status: "ok",
+    service: "cimax-api",
+    queues: { enabled: false },
+  });
 });
 
 test("GET /metrics exposes Prometheus-style counters", async (t) => {

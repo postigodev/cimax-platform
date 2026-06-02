@@ -25,6 +25,8 @@ VIEWER_API_KEY=
 RATE_LIMIT_WINDOW_MS=60000
 RATE_LIMIT_MAX=120
 IDEMPOTENCY_TTL_MS=86400000
+REDIS_URL=
+QUEUE_ENABLED=true
 PORT=3001
 CORS_ORIGIN=https://cimax.postigo.sh
 ```
@@ -40,6 +42,14 @@ npm run build
 npm run db:migrate
 npm start
 ```
+
+Run the BullMQ worker as a separate Railway service using the same source/image and this start command:
+
+```bash
+npm run worker
+```
+
+The API and worker must share the same `REDIS_URL`.
 
 If Railway is configured with a single start command, run migrations as a pre-deploy/manual step before promoting the deployment:
 

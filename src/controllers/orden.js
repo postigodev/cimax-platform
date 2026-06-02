@@ -4,6 +4,7 @@ import { v4 } from "uuid";
 import ApiError from "../utils/ApiError";
 import { getPagination, getPaginationMeta } from "../utils/pagination";
 import { completeIdempotency } from "../middlewares/idempotency.middlewares";
+import { enqueueOrderCreated } from "../queues/orderEvents.queue";
 
 const styles = ["#00a000", "cyan", "#fff"];
 
@@ -158,7 +159,11 @@ const postOrden = async (req, res) => {
   });
 
   await newOrden.save();
+  const job = await enqueueOrderCreated(newOrden);
   const responseBody = { status: 201, orden: newOrden };
+  if (job) {
+    responseBody.job = { queue: "order-events", id: job.id };
+  }
   await completeIdempotency(req, 201, responseBody);
   return res.status(201).json(responseBody);
 };

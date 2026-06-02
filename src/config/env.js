@@ -28,6 +28,10 @@ const env = {
   IDEMPOTENCY: {
     TTL_MS: Number(process.env.IDEMPOTENCY_TTL_MS || 86_400_000),
   },
+  REDIS_URL: process.env.REDIS_URL || "redis://localhost:6379",
+  QUEUES: {
+    ENABLED: process.env.QUEUE_ENABLED !== "false",
+  },
   CORS_ORIGIN: parseOrigins(
     process.env.CORS_ORIGIN ||
       "http://localhost:5173,http://localhost:3000,https://cimax.postigo.sh"

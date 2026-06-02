@@ -6,6 +6,7 @@ import env from "./config/env";
 import { errorHandler, notFound } from "./middlewares/error.middlewares";
 import { apiRateLimiter } from "./middlewares/rateLimit.middlewares";
 import { metricsMiddleware, renderMetrics } from "./observability/metrics";
+import { getOrderEventsQueueHealth } from "./queues/orderEvents.queue";
 
 const app = express();
 
@@ -29,9 +30,14 @@ app.use(
 app.use(helmet({ crossOriginOpenerPolicy: { policy: "unsafe-none" } }));
 app.use(express.json({ limit: "1mb" }));
 
-app.get("/health", (req, res) =>
-  res.json({ status: "ok", service: "cimax-api" })
-);
+app.get("/health", async (req, res, next) => {
+  try {
+    const queues = await getOrderEventsQueueHealth();
+    return res.json({ status: "ok", service: "cimax-api", queues });
+  } catch (error) {
+    return next(error);
+  }
+});
 app.get("/metrics", renderMetrics);
 app.use("/v1", apiRateLimiter, require("./routes/api"));
 app.use(notFound);

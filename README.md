@@ -78,6 +78,8 @@ VIEWER_API_KEY=local-viewer-key
 RATE_LIMIT_WINDOW_MS=60000
 RATE_LIMIT_MAX=120
 IDEMPOTENCY_TTL_MS=86400000
+REDIS_URL=redis://localhost:6379
+QUEUE_ENABLED=true
 CORS_ORIGIN=http://localhost:5173,http://localhost:3000,https://cimax.postigo.sh
 ```
 
@@ -113,8 +115,10 @@ npm run dev:local
 This starts:
 
 - MongoDB in Docker
+- Redis in Docker
 - SWC backend compiler in watch mode
 - Express API on `http://localhost:3001`
+- BullMQ worker for order events
 - Vite web client on `http://localhost:5173`
 
 For this flow, `.env` should point at local Docker Mongo:
@@ -128,6 +132,8 @@ VIEWER_API_KEY=local-viewer-key
 RATE_LIMIT_WINDOW_MS=60000
 RATE_LIMIT_MAX=120
 IDEMPOTENCY_TTL_MS=86400000
+REDIS_URL=redis://localhost:6379
+QUEUE_ENABLED=true
 ```
 
 Seed deterministic demo data:
@@ -157,12 +163,13 @@ npm run dev:demo     # seed demo data, then run the local stack
 npm run verify       # backend tests plus frontend production build
 npm run verify:audit # backend and frontend npm audit
 npm run load:smoke   # short k6 API smoke test
-npm run db:up        # run only MongoDB in Docker
+npm run db:up        # run MongoDB and Redis in Docker
 npm run db:migrate   # apply versioned MongoDB migrations
 npm run db:seed      # seed deterministic local demo data
-npm run db:down      # stop only MongoDB
+npm run db:down      # stop MongoDB and Redis
 npm run db:reset     # stop stack and remove Mongo volume
-npm run docker:up    # run API + Mongo with Docker Compose
+npm run worker       # run BullMQ worker against Redis
+npm run docker:up    # run API + worker + Mongo + Redis with Docker Compose
 npm run docker:down  # stop Docker Compose stack
 npm run docker:reset # stop stack and remove Mongo volume
 ```
@@ -225,6 +232,18 @@ curl -X POST \
 ```
 
 The same key and payload replays the original `201` response. The same key with a different payload returns `409`. Stored idempotency responses expire through MongoDB TTL using `IDEMPOTENCY_TTL_MS`.
+
+## Background Jobs
+
+Order creation enqueues an `order.created` job in BullMQ when `QUEUE_ENABLED=true`.
+
+Local worker:
+
+```bash
+npm run worker
+```
+
+The default local developer stack starts Redis and the worker automatically through `npm run dev:local`.
 
 OpenAPI contract:
 

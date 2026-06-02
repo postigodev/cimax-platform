@@ -88,6 +88,16 @@ npm run db:migrate
 
 The migration runner records applied IDs in `schema_migrations` and uses `migration_locks` to avoid concurrent runs. Railway should run this command before promoting a deployment that changes indexes or persisted operational metadata.
 
+## Background Worker
+
+BullMQ jobs are processed by a separate worker process:
+
+```bash
+npm run worker
+```
+
+In Railway, deploy this as a second service using the same source/image as the API and the same `REDIS_URL`.
+
 ## Dependency Updates
 
 Dependabot is enabled for:

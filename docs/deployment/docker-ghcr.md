@@ -31,6 +31,8 @@ docker run --rm \
   -e RATE_LIMIT_WINDOW_MS=60000 \
   -e RATE_LIMIT_MAX=120 \
   -e IDEMPOTENCY_TTL_MS=86400000 \
+  -e REDIS_URL="redis://host.docker.internal:6379" \
+  -e QUEUE_ENABLED=true \
   -e CORS_ORIGIN="http://localhost:3000,https://cimax.postigo.sh" \
   cimax-api:local
 ```
@@ -43,7 +45,7 @@ curl http://localhost:3001/health
 
 ## Local Compose Stack
 
-Run API + Mongo:
+Run API + worker + Mongo + Redis:
 
 ```bash
 docker compose up --build
@@ -59,6 +61,7 @@ The compose stack exposes:
 
 - API: `http://localhost:3001`
 - MongoDB: `mongodb://localhost:27017/cimax`
+- Redis: `redis://localhost:6379`
 
 Stop the stack:
 
@@ -107,6 +110,8 @@ VIEWER_API_KEY=
 RATE_LIMIT_WINDOW_MS=60000
 RATE_LIMIT_MAX=120
 IDEMPOTENCY_TTL_MS=86400000
+REDIS_URL=
+QUEUE_ENABLED=true
 PORT=3001
 CORS_ORIGIN=https://cimax.postigo.sh
 ```
