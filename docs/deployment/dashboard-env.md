@@ -70,6 +70,12 @@ VITE_API_URL=https://<railway-api-domain>/v1
 
 ## Post-Deploy Smoke
 
+The API service runs compiled migrations during Railway pre-deploy:
+
+```bash
+node dist/scripts/dbMigrate.js
+```
+
 After Railway deploys:
 
 ```bash

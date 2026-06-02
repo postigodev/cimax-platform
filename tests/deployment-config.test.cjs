@@ -13,7 +13,7 @@ test("Railway API config uses Railpack and production API commands", () => {
 
   assert.equal(config.build.builder, "RAILPACK");
   assert.equal(config.build.buildCommand, "npm run build");
-  assert.deepEqual(config.deploy.preDeployCommand, ["npm run db:migrate"]);
+  assert.deepEqual(config.deploy.preDeployCommand, ["node dist/scripts/dbMigrate.js"]);
   assert.equal(config.deploy.startCommand, "npm start");
   assert.equal(config.deploy.healthcheckPath, "/health");
 });

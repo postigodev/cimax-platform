@@ -53,7 +53,7 @@ Expected commands:
 ```bash
 npm install
 npm run build
-npm run db:migrate
+node dist/scripts/dbMigrate.js
 npm start
 ```
 
@@ -74,7 +74,7 @@ For the worker service, set Railway's custom config-as-code file path to:
 If Railway is configured with a single start command, run migrations as a pre-deploy/manual step before promoting the deployment:
 
 ```bash
-npm run db:migrate
+node dist/scripts/dbMigrate.js
 ```
 
 Healthcheck:
