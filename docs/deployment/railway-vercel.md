@@ -37,7 +37,14 @@ Expected commands:
 ```bash
 npm install
 npm run build
+npm run db:migrate
 npm start
+```
+
+If Railway is configured with a single start command, run migrations as a pre-deploy/manual step before promoting the deployment:
+
+```bash
+npm run db:migrate
 ```
 
 Healthcheck:

@@ -158,6 +158,7 @@ npm run verify       # backend tests plus frontend production build
 npm run verify:audit # backend and frontend npm audit
 npm run load:smoke   # short k6 API smoke test
 npm run db:up        # run only MongoDB in Docker
+npm run db:migrate   # apply versioned MongoDB migrations
 npm run db:seed      # seed deterministic local demo data
 npm run db:down      # stop only MongoDB
 npm run db:reset     # stop stack and remove Mongo volume
@@ -248,6 +249,20 @@ Current coverage includes:
 - implemented route coverage
 - stale route detection
 - path parameter consistency
+
+## Database Migrations
+
+Versioned MongoDB migrations live in:
+
+- [src/scripts/dbMigrate.js](src/scripts/dbMigrate.js)
+
+Run them locally:
+
+```bash
+npm run db:migrate
+```
+
+The migrator records completed migrations in `schema_migrations`, uses a short-lived lock in `migration_locks`, and creates the indexes needed by read paths, idempotency records, and demo lookup data.
 
 ## Load Testing
 

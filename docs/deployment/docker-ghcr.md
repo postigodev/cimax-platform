@@ -49,6 +49,12 @@ Run API + Mongo:
 docker compose up --build
 ```
 
+Apply local MongoDB migrations:
+
+```bash
+npm run db:migrate
+```
+
 The compose stack exposes:
 
 - API: `http://localhost:3001`

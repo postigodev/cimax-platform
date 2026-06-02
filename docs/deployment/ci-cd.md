@@ -78,6 +78,16 @@ Manual workflow:
 
 The workflow uses `K6_API_KEY` from GitHub Actions secrets and accepts the Railway API URL as a dispatch input.
 
+## Database Migrations
+
+MongoDB migrations are versioned and idempotent:
+
+```bash
+npm run db:migrate
+```
+
+The migration runner records applied IDs in `schema_migrations` and uses `migration_locks` to avoid concurrent runs. Railway should run this command before promoting a deployment that changes indexes or persisted operational metadata.
+
 ## Dependency Updates
 
 Dependabot is enabled for:
