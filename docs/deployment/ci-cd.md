@@ -45,6 +45,12 @@ Local equivalent:
 npm run verify
 ```
 
+Post-deploy API smoke:
+
+```bash
+API_BASE_URL=https://<railway-api-domain> API_KEY=<viewer-key> npm run smoke:api
+```
+
 ## Contract Coverage
 
 The backend test suite currently verifies:

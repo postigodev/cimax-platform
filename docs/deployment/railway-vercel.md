@@ -12,7 +12,19 @@ The Railway API domain will be generated during deployment. After Railway create
 VITE_API_URL=https://<railway-service-domain>/v1
 ```
 
+Dashboard env checklist:
+
+- [docs/deployment/dashboard-env.md](dashboard-env.md)
+
 ## Railway API
+
+Config-as-code files:
+
+```text
+railway.json         # API service
+railway-worker.json  # worker service; set as custom Railway config file
+railpack.json        # Railpack Node provider config
+```
 
 Required environment variables:
 
@@ -52,6 +64,12 @@ npm run worker
 ```
 
 The API and worker must share the same `REDIS_URL`.
+
+For the worker service, set Railway's custom config-as-code file path to:
+
+```text
+/railway-worker.json
+```
 
 If Railway is configured with a single start command, run migrations as a pre-deploy/manual step before promoting the deployment:
 
@@ -99,6 +117,12 @@ Required environment variables:
 VITE_API_URL=https://<railway-service-domain>/v1
 ```
 
+Vercel config-as-code:
+
+```text
+client/vercel.json
+```
+
 Production domain:
 
 ```text
@@ -115,3 +139,11 @@ Initial rollback path:
 4. Revert the frontend deployment only if the web build introduced the failure.
 
 Blue/green promotion will be documented after the first Railway deployment is created.
+
+## Smoke Test
+
+After Railway deployment:
+
+```bash
+API_BASE_URL=https://<railway-service-domain> API_KEY=<viewer-key> npm run smoke:api
+```

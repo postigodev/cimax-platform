@@ -31,6 +31,7 @@
     "verify:audit": "npm audit && npm --prefix client audit",
     "load:smoke": "k6 run load/k6/api-smoke.js",
     "load:baseline": "k6 run load/k6/api-baseline.js",
+    "smoke:api": "node scripts/smoke-api.cjs",
     "db:up": "docker compose up -d mongo redis",
     "db:migrate": "npm run build:server && node dist/scripts/dbMigrate.js",
     "db:seed": "npm run build:server && node dist/scripts/seedDemo.js",

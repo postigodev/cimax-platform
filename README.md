@@ -347,6 +347,7 @@ CI/CD notes:
 - [docs/deployment/ci-cd.md](docs/deployment/ci-cd.md)
 - [docs/deployment/docker-ghcr.md](docs/deployment/docker-ghcr.md)
 - [docs/deployment/railway-vercel.md](docs/deployment/railway-vercel.md)
+- [docs/deployment/dashboard-env.md](docs/deployment/dashboard-env.md)
 
 ## Security Notes
 
