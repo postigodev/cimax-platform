@@ -17,6 +17,8 @@ services:
       IDEMPOTENCY_TTL_MS: 86400000
       REDIS_URL: redis://redis:6379
       QUEUE_ENABLED: "true"
+      CACHE_ENABLED: "true"
+      CACHE_TTL_SECONDS: 30
       CORS_ORIGIN: http://localhost:3000,https://cimax.postigo.sh
     depends_on:
       mongo:

@@ -80,6 +80,8 @@ RATE_LIMIT_MAX=120
 IDEMPOTENCY_TTL_MS=86400000
 REDIS_URL=redis://localhost:6379
 QUEUE_ENABLED=true
+CACHE_ENABLED=true
+CACHE_TTL_SECONDS=30
 CORS_ORIGIN=http://localhost:5173,http://localhost:3000,https://cimax.postigo.sh
 ```
 
@@ -134,6 +136,8 @@ RATE_LIMIT_MAX=120
 IDEMPOTENCY_TTL_MS=86400000
 REDIS_URL=redis://localhost:6379
 QUEUE_ENABLED=true
+CACHE_ENABLED=true
+CACHE_TTL_SECONDS=30
 ```
 
 Seed deterministic demo data:
@@ -206,6 +210,7 @@ Main resources:
 
 - `/v1/ordenes`
 - `/v1/doctores`
+- `/v1/audit/events`
 
 Mutation routes require an `x-api-key` header:
 
@@ -236,6 +241,7 @@ The same key and payload replays the original `201` response. The same key with 
 ## Background Jobs
 
 Order creation enqueues an `order.created` job in BullMQ when `QUEUE_ENABLED=true`.
+The worker stores processed order events in MongoDB as audit events.
 
 Local worker:
 
@@ -244,6 +250,22 @@ npm run worker
 ```
 
 The default local developer stack starts Redis and the worker automatically through `npm run dev:local`.
+
+Audit events are admin-only and paginated:
+
+```bash
+curl -H "x-api-key: local-admin-key" http://localhost:3001/v1/audit/events?type=order.created
+```
+
+## Redis Caching
+
+Redis caches hot read paths when `CACHE_ENABLED=true`:
+
+- `/v1/doctores/all`
+- `/v1/doctores/tomas`
+- paginated `/v1/ordenes/*` reads
+
+Responses include `X-Cache: hit` or `X-Cache: miss`. Mutations invalidate affected cache keys. Cache hit/miss/bypass counters are exposed in `/metrics`.
 
 OpenAPI contract:
 

@@ -98,6 +98,13 @@ npm run worker
 
 In Railway, deploy this as a second service using the same source/image as the API and the same `REDIS_URL`.
 
+The `order-events` worker writes processed order events to MongoDB `auditevents`, which gives the portfolio demo a durable event trail separate from request logs.
+
+## Redis Cache
+
+The API uses Redis for short-lived read-through caching when `CACHE_ENABLED=true`.
+Use the same `REDIS_URL` as BullMQ. Mutations invalidate affected keys, and cache hit/miss/bypass counters are exposed through `/metrics`.
+
 ## Dependency Updates
 
 Dependabot is enabled for:

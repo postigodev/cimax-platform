@@ -5,12 +5,33 @@ import ApiError from "../utils/ApiError";
 import { getPagination, getPaginationMeta } from "../utils/pagination";
 import { completeIdempotency } from "../middlewares/idempotency.middlewares";
 import { enqueueOrderCreated } from "../queues/orderEvents.queue";
+import {
+  cacheHeaders,
+  cacheKey,
+  getCachedJson,
+  invalidateCachePattern,
+  requestCacheKey,
+  setCachedJson,
+} from "../cache/redisCache";
 
 const styles = ["#00a000", "cyan", "#fff"];
 
 const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const orderCachePattern = cacheKey("ordenes", "*");
+
+const invalidateOrderCaches = async () => {
+  await invalidateCachePattern(orderCachePattern);
+};
 
 const sendPaginatedOrdenes = async (req, res, filter, sort = { date: 1 }) => {
+  const key = requestCacheKey("ordenes", req);
+  const cached = await getCachedJson(key);
+
+  if (cached) {
+    res.set("X-Cache", cacheHeaders.hit);
+    return res.json(cached);
+  }
+
   const { page, limit, skip } = getPagination(req.query);
   const [ordenes, total] = await Promise.all([
     Orden.find(filter)
@@ -22,13 +43,17 @@ const sendPaginatedOrdenes = async (req, res, filter, sort = { date: 1 }) => {
     Orden.countDocuments(filter),
   ]);
 
-  return res.json({
+  const responseBody = {
     status: 200,
     ordenes_length: ordenes.length,
     total,
     pagination: getPaginationMeta({ total, page, limit }),
     ordenes,
-  });
+  };
+
+  await setCachedJson(key, responseBody);
+  res.set("X-Cache", cacheHeaders.miss);
+  return res.json(responseBody);
 };
 
 const dateFilter = (req) => ({
@@ -84,6 +109,7 @@ const bulkDeleteOrdens = async (req, res) => {
   }
 
   const result = await Orden.deleteMany({ _id: { $in: ids } });
+  await invalidateOrderCaches();
 
   return res.status(201).json({
     status: 201,
@@ -160,6 +186,7 @@ const postOrden = async (req, res) => {
 
   await newOrden.save();
   const job = await enqueueOrderCreated(newOrden);
+  await invalidateOrderCaches();
   const responseBody = { status: 201, orden: newOrden };
   if (job) {
     responseBody.job = { queue: "order-events", id: job.id };
@@ -199,6 +226,7 @@ const editOrden = async (req, res) => {
   orden.enviado = enviado;
   orden = await orden.save();
   orden = await orden.populate("toma doctor");
+  await invalidateOrderCaches();
 
   return res.status(201).json({ status: 201, orden });
 };
@@ -217,6 +245,7 @@ const editOrderColor = async (req, res) => {
 
   orden.color = color;
   await orden.save();
+  await invalidateOrderCaches();
 
   return res.status(201).json({ status: 201, orden });
 };
@@ -225,6 +254,7 @@ const editDoctorColor = async (req, res) => {
   const { orden } = req;
   orden.doctor_color = !orden.doctor_color;
   await orden.save();
+  await invalidateOrderCaches();
 
   return res.status(201).json({ status: 201, orden });
 };
@@ -233,6 +263,7 @@ const editCommentColor = async (req, res) => {
   const { orden } = req;
   orden.comment_color = !orden.comment_color;
   await orden.save();
+  await invalidateOrderCaches();
 
   return res.status(201).json({ status: 201, orden });
 };

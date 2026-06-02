@@ -31,6 +31,17 @@ const migrations = [
         .createIndex({ expiresAt: 1 }, { expireAfterSeconds: 0 });
     },
   },
+  {
+    id: "202606010003_audit_events",
+    description: "Create audit event indexes for admin event history.",
+    up: async (db) => {
+      await db.collection("auditevents").createIndex({ occurredAt: -1 });
+      await db.collection("auditevents").createIndex({ type: 1, occurredAt: -1 });
+      await db
+        .collection("auditevents")
+        .createIndex({ entityType: 1, entityId: 1, occurredAt: -1 });
+    },
+  },
 ];
 
 const acquireLock = async (db) => {

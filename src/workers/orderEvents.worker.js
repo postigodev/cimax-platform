@@ -1,5 +1,10 @@
 import { Worker } from "bullmq";
+import mongoose from "mongoose";
+import env from "../config/env";
+import AuditEvent from "../models/AuditEvent";
 import { closeRedisConnection, getRedisConnection } from "../queues/redis";
+
+mongoose.set("strictQuery", false);
 
 const worker = new Worker(
   "order-events",
@@ -7,6 +12,26 @@ const worker = new Worker(
     if (job.name !== "order.created") {
       throw new Error(`Unsupported job: ${job.name}`);
     }
+
+    if (mongoose.connection.readyState === 0) {
+      await mongoose.connect(env.MONGO_URI);
+    }
+
+    await AuditEvent.create({
+      type: "order.created",
+      actor: "system",
+      entityType: "order",
+      entityId: job.data.orderId,
+      source: "order-events-worker",
+      payload: {
+        jobId: job.id,
+        boleta: job.data.boleta,
+        doctorId: job.data.doctorId,
+        tomaIds: job.data.tomaIds,
+        createdAt: job.data.createdAt,
+      },
+      occurredAt: new Date(job.data.createdAt),
+    });
 
     console.log("[order-events] order.created", {
       jobId: job.id,
@@ -35,6 +60,7 @@ worker.on("failed", (job, error) => {
 const shutdown = async () => {
   await worker.close();
   await closeRedisConnection();
+  await mongoose.disconnect();
 };
 
 process.on("SIGINT", () => shutdown().then(() => process.exit(0)));

@@ -33,6 +33,8 @@ docker run --rm \
   -e IDEMPOTENCY_TTL_MS=86400000 \
   -e REDIS_URL="redis://host.docker.internal:6379" \
   -e QUEUE_ENABLED=true \
+  -e CACHE_ENABLED=true \
+  -e CACHE_TTL_SECONDS=30 \
   -e CORS_ORIGIN="http://localhost:3000,https://cimax.postigo.sh" \
   cimax-api:local
 ```
@@ -112,6 +114,8 @@ RATE_LIMIT_MAX=120
 IDEMPOTENCY_TTL_MS=86400000
 REDIS_URL=
 QUEUE_ENABLED=true
+CACHE_ENABLED=true
+CACHE_TTL_SECONDS=30
 PORT=3001
 CORS_ORIGIN=https://cimax.postigo.sh
 ```

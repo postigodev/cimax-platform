@@ -328,6 +328,40 @@
           }
         }
       }
+    },
+    "/v1/audit/events": {
+      "get": {
+        "tags": ["Audit"],
+        "summary": "List audit events",
+        "security": [{ "ApiKeyAuth": [] }],
+        "parameters": [
+          { "$ref": "#/components/parameters/Page" },
+          { "$ref": "#/components/parameters/Limit" },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string", "example": "order.created" }
+          },
+          {
+            "name": "entityType",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string", "example": "order" }
+          },
+          {
+            "name": "entityId",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/AuditEventList" },
+          "401": { "$ref": "#/components/responses/Error" },
+          "403": { "$ref": "#/components/responses/Error" }
+        }
+      }
     }
   },
   "components": {
@@ -422,6 +456,10 @@
         "additionalProperties": true
       },
       "Toma": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "AuditEvent": {
         "type": "object",
         "additionalProperties": true
       },
@@ -531,6 +569,25 @@
       },
       "TomaList": {
         "description": "Procedure list response"
+      },
+      "AuditEventList": {
+        "description": "Paginated audit event list",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": { "type": "integer" },
+                "events": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/AuditEvent" }
+                },
+                "total": { "type": "integer" },
+                "pagination": { "$ref": "#/components/schemas/Pagination" }
+              }
+            }
+          }
+        }
       }
     }
   }

@@ -1,5 +1,6 @@
 const startedAt = Date.now();
 const requests = new Map();
+const cacheEvents = new Map();
 
 const labelValue = (value) => String(value).replace(/\\/g, "\\\\").replace(/"/g, '\\"');
 
@@ -26,6 +27,16 @@ const getMetric = (labels) => {
   }
 
   return requests.get(key);
+};
+
+export const recordCacheEvent = (cache, result) => {
+  const key = JSON.stringify({ cache, result });
+
+  if (!cacheEvents.has(key)) {
+    cacheEvents.set(key, { labels: { cache, result }, count: 0 });
+  }
+
+  cacheEvents.get(key).count += 1;
 };
 
 export const metricsMiddleware = (req, res, next) => {
@@ -76,6 +87,18 @@ export const renderMetrics = (_req, res) => {
         6
       )}`
     );
+  }
+
+  lines.push(
+    "# HELP cimax_cache_events_total Cache events by cache backend and result.",
+    "# TYPE cimax_cache_events_total counter"
+  );
+
+  for (const event of cacheEvents.values()) {
+    const labels = `cache="${labelValue(event.labels.cache)}",result="${labelValue(
+      event.labels.result
+    )}"`;
+    lines.push(`cimax_cache_events_total{${labels}} ${event.count}`);
   }
 
   res.type("text/plain").send(`${lines.join("\n")}\n`);

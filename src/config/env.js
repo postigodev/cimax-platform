@@ -32,6 +32,10 @@ const env = {
   QUEUES: {
     ENABLED: process.env.QUEUE_ENABLED !== "false",
   },
+  CACHE: {
+    ENABLED: process.env.CACHE_ENABLED !== "false",
+    TTL_SECONDS: Number(process.env.CACHE_TTL_SECONDS || 30),
+  },
   CORS_ORIGIN: parseOrigins(
     process.env.CORS_ORIGIN ||
       "http://localhost:5173,http://localhost:3000,https://cimax.postigo.sh"

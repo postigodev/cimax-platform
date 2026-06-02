@@ -8,6 +8,7 @@ process.env.ADMIN_API_KEY = process.env.ADMIN_API_KEY || "local-admin-key";
 process.env.OPERATOR_API_KEY = process.env.OPERATOR_API_KEY || "local-operator-key";
 process.env.VIEWER_API_KEY = process.env.VIEWER_API_KEY || "local-viewer-key";
 process.env.QUEUE_ENABLED = "false";
+process.env.CACHE_ENABLED = "false";
 
 const appModule = require("../dist/app.js");
 const app = appModule.default || appModule;
@@ -154,6 +155,25 @@ test("operator API keys cannot use admin-only delete routes", async (t) => {
         "x-api-key": "local-operator-key",
       },
       body: JSON.stringify({ password: "unused", ordenes: [] }),
+    }
+  );
+  const body = await response.json();
+
+  assert.equal(response.status, 403);
+  assert.equal(body.status, 403);
+  assert.equal(body.message, "No tiene permisos para esta accion");
+});
+
+test("operator API keys cannot read admin audit events", async (t) => {
+  const server = await listen();
+  t.after(() => server.close());
+
+  const response = await fetch(
+    `http://127.0.0.1:${server.address().port}/v1/audit/events`,
+    {
+      headers: {
+        "x-api-key": "local-operator-key",
+      },
     }
   );
   const body = await response.json();
