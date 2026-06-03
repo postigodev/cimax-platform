@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="client/public/logo192.png" alt="CIMAX logo" width="96" height="96" />
+</p>
+
 # CIMAX Operations Platform
 
 Sanitized public modernization of a legacy MERN operations platform built for a dental healthcare services provider.
@@ -28,13 +32,13 @@ The original internal system replaced manual tracking with a structured app:
 
 ```mermaid
 flowchart LR
-  Web[Vercel Vite React Web<br/>cimax.postigo.sh] --> API[Railway Express API]
-  API --> Mongo[(Railway MongoDB)]
-  API --> Redis[(Railway Redis)]
-  API --> Queue[BullMQ order-events queue]
-  Queue --> Worker[Railway Worker]
+  Web["Vercel Vite React Web<br/>cimax.postigo.sh"] --> API["Railway Express API"]
+  API --> Mongo[("Railway MongoDB")]
+  API --> Redis[("Railway Redis")]
+  API --> Queue["BullMQ order-events queue"]
+  Queue --> Worker["Railway Worker"]
   Worker --> Mongo
-  API --> Metrics[/health and /metrics]
+  API --> Metrics["/health and /metrics"]
 ```
 
 Local parity is available through Docker Compose:
