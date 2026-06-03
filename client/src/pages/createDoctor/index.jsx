@@ -1,112 +1,139 @@
-import React from "react";
-import axios from "axios";
-import { useState } from "react";
-import TextField from "@mui/material/TextField";
+import React, { useState } from "react";
+import { BadgePercent, Save, Stethoscope } from "lucide-react";
 import { toast } from "react-hot-toast";
-import Button from "@mui/material/Button";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
-import { CONFIG } from "../../config";
+import { api } from "../../api";
+import { useI18n } from "../../i18n";
+import { PageHeader } from "../../components/PageHeader";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+
+const initialDoctor = {
+  nombres: "",
+  apellidos: "",
+  convenio: false,
+  descuento: false,
+  monto: "",
+};
+
+function RuleSwitch({ id, label, checked, onCheckedChange }) {
+  return (
+    <div className="flex items-center justify-between rounded-md border bg-background p-3">
+      <Label htmlFor={id} className="text-sm font-medium">
+        {label}
+      </Label>
+      <Switch id={id} checked={checked} onCheckedChange={onCheckedChange} />
+    </div>
+  );
+}
 
 export const CreateDoctor = () => {
-  const [nombres, setNombres] = useState("");
-  const [apellidos, setApellidos] = useState("");
-  const [convenio, setConvenio] = useState(false);
-  const [descuento, setDescuento] = useState(false);
-  const [monto, setMonto] = useState(0);
+  const [doctor, setDoctor] = useState(initialDoctor);
+  const { t } = useI18n();
 
-  const handleNombres = (e) => {
-    setNombres(e.target.value);
+  const updateDoctor = (field, value) => {
+    setDoctor((current) => ({ ...current, [field]: value }));
   };
 
-  const handleApellidos = (e) => {
-    setApellidos(e.target.value);
-  };
+  const submitDoctor = async (event) => {
+    event.preventDefault();
+    const toastId = toast.loading(t("common.saving"));
 
-  const handleConvenio = (e) => {
-    setConvenio(!convenio);
-  };
-
-  const handleDescuento = (e) => {
-    setDescuento(!descuento);
-  };
-
-  const handleMonto = (e) => {
-    setMonto(e.target.value);
-  };
-
-  const submitDoctor = async () => {
     try {
-        toast.loading();
-        await axios({
-            url: `${CONFIG.DOMAIN}/doctores/create-doctor`,
-            method: "POST",
-            headers: {
-            "Content-Type": "application/json",
-            },
-            data: {
-                nombres,
-                apellidos,
-                convenio,
-                descuento,
-                monto_descuento: monto
-            }
-        });
-        toast.dismiss();
-        toast.success('Doctor guardado con éxito');
-    } catch(e) {
-        toast.dismiss();
-        toast.error(e.response.data.message);
+      await api.post("/doctores/create-doctor", {
+        nombres: doctor.nombres,
+        apellidos: doctor.apellidos,
+        convenio: doctor.convenio,
+        descuento: doctor.descuento,
+        monto_descuento: doctor.monto === "" ? undefined : Number(doctor.monto),
+      });
+
+      setDoctor(initialDoctor);
+      toast.success(t("common.savedDoctor"), { id: toastId });
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message, { id: toastId });
     }
-  }
+  };
 
   return (
-    <div className="container">
-      <h1>Crear doctor</h1>
-      <div className="names-container flex">
-        <div className="input-container">
-          <TextField
-            id="nombres"
-            label="Nombres..."
-            variant="outlined"
-            onChange={handleNombres}
-          />
-        </div>
-        <div className="input-container">
-          <TextField
-            id="apellidos"
-            label="Apellidos..."
-            variant="outlined"
-            onChange={handleApellidos}
-          />
-        </div>
-      </div>
-      <div className="doctor-selects-container">
-        <FormControlLabel
-          control={<Switch onChange={handleConvenio} />}
-          label="Convenio"
-        />
-        <FormControlLabel
-          control={<Switch onChange={handleDescuento} />}
-          label="Descuento"
-        />
-      </div>
-      {descuento ? (
-        <div className="input-container">
-          <TextField
-            id="monto"
-            label="Monto..."
-            variant="outlined"
-            type="number"
-            onChange={handleMonto}
-          />
-        </div>
-      ) : (
-        ""
-      )}
-      <Button style={{marginTop: '1em'}} variant="outlined" onClick={submitDoctor}>
-        Guardar
-      </Button>
+    <div>
+      <PageHeader
+        eyebrow={t("doctor.eyebrow")}
+        title={t("doctor.title")}
+        description={t("doctor.description")}
+        badge={t("nav.doctors")}
+      />
+      <form className="grid gap-4 p-8 xl:grid-cols-[0.9fr_1.1fr]" onSubmit={submitDoctor}>
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Stethoscope />
+              {t("doctor.identity")}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="grid gap-4 md:grid-cols-2">
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="doctor-nombres">{t("doctor.firstNames")}</Label>
+              <Input
+                id="doctor-nombres"
+                value={doctor.nombres}
+                onChange={(event) => updateDoctor("nombres", event.target.value)}
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="doctor-apellidos">{t("doctor.lastNames")}</Label>
+              <Input
+                id="doctor-apellidos"
+                value={doctor.apellidos}
+                onChange={(event) => updateDoctor("apellidos", event.target.value)}
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <BadgePercent />
+              {t("doctor.businessRules")}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4">
+            <div className="grid gap-3 md:grid-cols-2">
+              <RuleSwitch
+                id="doctor-convenio"
+                label={t("doctor.agreement")}
+                checked={doctor.convenio}
+                onCheckedChange={(value) => updateDoctor("convenio", value)}
+              />
+              <RuleSwitch
+                id="doctor-descuento"
+                label={t("doctor.discount")}
+                checked={doctor.descuento}
+                onCheckedChange={(value) => updateDoctor("descuento", value)}
+              />
+            </div>
+            {doctor.descuento ? (
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="doctor-monto">{t("doctor.discountAmount")}</Label>
+                <Input
+                  id="doctor-monto"
+                  type="number"
+                  min="0"
+                  value={doctor.monto}
+                  onChange={(event) => updateDoctor("monto", event.target.value)}
+                />
+              </div>
+            ) : null}
+            <Button type="submit" className="w-fit">
+              <Save data-icon="inline-start" />
+              {t("common.save")}
+            </Button>
+          </CardContent>
+        </Card>
+      </form>
     </div>
   );
 };
